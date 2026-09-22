@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: greenpath-ai
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn wsgi:application
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MONGODB_URL
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: greenpath_ai

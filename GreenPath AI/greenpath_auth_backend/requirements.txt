@@ -1,0 +1,26 @@
+# ============================================================
+# GreenPath AI — Industry-Level Authentication & Security Module
+# Backend Python Dependencies (Flask MVC + MySQL)
+# ============================================================
+
+# --- Core Web Framework ---
+Flask==3.0.3
+Flask-Cors==4.0.1
+
+# --- MySQL Database & Connection Pooling ---
+PyMySQL==1.1.1
+cryptography==42.0.8
+
+# --- Security & Authentication ---
+bcrypt==4.1.3
+PyJWT==2.8.0
+
+# --- Environment & Configuration ---
+python-dotenv==1.0.1
+pydantic==2.8.2
+pydantic-settings==2.3.4
+email-validator==2.2.0
+
+# --- WSGI Server (Production) ---
+gunicorn==22.0.0
+waitress==3.0.0
