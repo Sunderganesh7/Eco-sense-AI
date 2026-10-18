@@ -4,6 +4,8 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { InputField } from '../components/ui/InputField';
 import { Badge } from '../components/ui/Badge';
+import { PageLayout } from '../components/layout/PageLayout';
+import { FeatureHero } from '../components/ui/FeatureHero';
 import { formatEmissions } from '../utils/format';
 import { calculateEventFootprint, getEcoVendors, getVenueSuggestions } from '../utils/eventCalculations';
 
@@ -43,11 +45,14 @@ export function EventPlanner() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">Sustainable Event Planner</h1>
-        <p className="text-slate-500">Plan eco-friendly events with AI-powered carbon estimates and vendor suggestions.</p>
-      </div>
+    <PageLayout>
+      <FeatureHero 
+        label="Eco-Friendly Events"
+        title="Sustainable Event Planner"
+        description="Plan beautiful, eco-friendly events with AI-powered carbon estimates and sustainable vendor suggestions."
+        imageUrl="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop"
+        layout="split"
+      />
       <Card>
         <div className="space-y-4">
           <h3 className="text-base font-semibold text-slate-800">Event Details</h3>
@@ -74,7 +79,7 @@ export function EventPlanner() {
           <Button onClick={handleCalculate}>Calculate Event Footprint</Button>
         </div>
       </Card>
-    </div>
+    </PageLayout>
   );
 }
 
@@ -83,11 +88,14 @@ function EventResults({ input, result, onReset }: { input: EventInput; result: E
   const venueTips = useMemo(() => getVenueSuggestions(input.eventType), [input.eventType]);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">Event Carbon Footprint</h1>
-        <p className="text-slate-500">Estimated emissions for your {input.eventType} with {input.guestCount} guests.</p>
-      </div>
+    <PageLayout>
+      <FeatureHero 
+        label="Event Analysis"
+        title="Event Carbon Footprint"
+        description={`Estimated emissions for your ${input.eventType} with ${input.guestCount} guests.`}
+        imageUrl="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop"
+        layout="split"
+      />
 
       <div className="mb-6 text-center">
         <Card>
@@ -155,6 +163,6 @@ function EventResults({ input, result, onReset }: { input: EventInput; result: E
         <Button variant="outline" onClick={onReset}>Plan Another Event</Button>
         <Button onClick={() => window.location.href = '/calculator'}>Try Carbon Calculator</Button>
       </div>
-    </div>
+    </PageLayout>
   );
 }

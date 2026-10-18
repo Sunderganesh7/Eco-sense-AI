@@ -8,8 +8,10 @@ import {
   Satellite, MapPin, AlertTriangle, CheckCircle, Info,
   BarChart2, FileText, Activity, ShieldCheck, Play, Pause,
   RefreshCw, Layers, Download,
-  TrendingDown, TrendingUp, Clock, Database, Globe
+  TrendingDown, TrendingUp, Clock, Database, Globe,
+  Target, Map, Calendar, Cloud, ArrowRight
 } from "lucide-react";
+import FeatureHero from "../components/FeatureHero";
 import { MapContainer, TileLayer, Rectangle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Line } from "react-chartjs-2";
@@ -29,9 +31,9 @@ const Badge = ({ children, color = "gray" }) => {
   const colors = {
     green: "bg-emerald-100 text-emerald-800 border-emerald-200",
     amber: "bg-amber-100 text-amber-800 border-amber-200",
-    red:   "bg-red-100 text-red-800 border-red-200",
-    gray:  "bg-slate-100 text-slate-600 border-slate-200",
-    blue:  "bg-blue-100 text-blue-800 border-blue-200",
+    red: "bg-red-100 text-red-800 border-red-200",
+    gray: "bg-slate-100 text-slate-600 border-slate-200",
+    blue: "bg-blue-100 text-blue-800 border-blue-200",
   };
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${colors[color]}`}>
@@ -61,7 +63,7 @@ const SectionHeader = ({ title, subtitle, icon: Icon }) => (
   <div className="mb-6">
     <div className="flex items-center gap-2 mb-1">
       {Icon && <Icon className="w-5 h-5 text-emerald-700" />}
-      <h2 className="text-lg font-bold text-slate-800">{title}</h2>
+      <h2 className="gg-section-title">{title}</h2>
     </div>
     {subtitle && <p className="text-sm text-slate-500 ml-7">{subtitle}</p>}
   </div>
@@ -74,8 +76,8 @@ const LoadingStep = ({ steps, current }) => (
         {i < current
           ? <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
           : i === current
-          ? <RefreshCw className="w-4 h-4 text-emerald-600 animate-spin flex-shrink-0" />
-          : <div className="w-4 h-4 rounded-full border-2 border-slate-200 flex-shrink-0" />}
+            ? <RefreshCw className="w-4 h-4 text-emerald-600 animate-spin flex-shrink-0" />
+            : <div className="w-4 h-4 rounded-full border-2 border-slate-200 flex-shrink-0" />}
         {step}
       </div>
     ))}
@@ -161,7 +163,7 @@ const GeoGuardian = () => {
       if (!bboxInput) return null;
       const parts = bboxInput.split(",").map(Number);
       if (parts.length === 4 && parts.every(n => !isNaN(n))) return parts;
-    } catch {}
+    } catch { }
     return null;
   })();
 
@@ -175,7 +177,7 @@ const GeoGuardian = () => {
           lon: ((parts[0] + parts[2]) / 2).toFixed(6)
         };
       }
-    } catch {}
+    } catch { }
     return null;
   })();
 
@@ -313,52 +315,84 @@ const GeoGuardian = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-12">
-      {/* ── Page Header ───────────────────────────────────────────────────── */}
-      <div className="bg-white border-b border-slate-200 px-6 py-5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="bg-emerald-700 text-white p-2.5 rounded-xl">
-              <Satellite className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">GeoGuardian</h1>
-              <p className="text-sm text-slate-500">Satellite Vegetation Monitoring & Environmental Assessment</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge color="blue">Sentinel-2 L2A</Badge>
-            <Badge color="gray">Copernicus CDSE</Badge>
-          </div>
-        </div>
-      </div>
+      <FeatureHero
+        icon={Satellite}
+        title="GeoGuardian"
+        description="Satellite vegetation monitoring and environmental assessment using Sentinel-2 L2A data from Copernicus Data Space."
+        imageUrl="/satellite_hero.jpg"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        
+
         {/* Active Analysis Indicator Banner */}
         {analysisConfig.bbox && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-emerald-700 text-white p-2.5 rounded-lg flex-shrink-0">
-                <Globe className="w-5 h-5" />
+          <div className="bg-white rounded-2xl border-l-[4px] border-emerald-600 shadow-sm p-6 relative border-y border-r border-slate-200">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-6 pb-6 border-b border-slate-100">
+              <div className="flex flex-col gap-1">
+                <span className="gg-label">Active Context</span>
+                <h2 className="gg-section-title">ACTIVE ANALYSIS AREA</h2>
               </div>
-              <div className="text-sm">
-                <p className="font-bold text-emerald-900 text-base">ACTIVE ANALYSIS</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 text-emerald-800 text-xs mt-2">
-                  <div><strong>Location:</strong> {analysisConfig.locationName || analysisResult?.locationName || "Location name unavailable"}</div>
-                  <div><strong>Coordinates:</strong> {centerLatLon ? `${centerLatLon.lat}°N, ${centerLatLon.lon}°E` : "—"}</div>
-                  <div><strong>Bounding Box:</strong> {analysisConfig.bbox}</div>
-                  <div><strong>Period:</strong> {analysisConfig.startDate} → {analysisConfig.endDate}</div>
-                  <div><strong>Cloud Threshold:</strong> ≤ {analysisConfig.cloudThreshold}%</div>
-                  <div><strong>Analysis ID:</strong> {analysisId || analysisResult?.analysisId || "N/A"}</div>
+              <button
+                onClick={resetAnalysis}
+                className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-600 font-semibold px-5 py-2.5 rounded-lg text-sm transition shadow-sm flex items-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" /> Change Analysis Area
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-8">
+              <div className="flex gap-4">
+                <MapPin className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Location</span>
+                  <span className="text-sm text-slate-800 font-medium">{analysisConfig.locationName || analysisResult?.locationName || "Location name unavailable"}</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Target className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Coordinates</span>
+                  <span className="text-sm font-mono text-slate-800 bg-slate-50 px-2 py-0.5 rounded-md w-fit">
+                    {centerLatLon && Number.isFinite(Number(centerLatLon.lat)) && Number.isFinite(Number(centerLatLon.lon)) 
+                      ? `${Number(centerLatLon.lat).toFixed(4)}°N, ${Number(centerLatLon.lon).toFixed(4)}°E` 
+                      : "—"}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Map className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Bounding Box</span>
+                  <span className="text-xs font-mono text-slate-800 truncate" title={analysisConfig.bbox}>{analysisConfig.bbox}</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Calendar className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Period</span>
+                  <span className="text-sm text-slate-800 font-medium">{analysisConfig.startDate} → {analysisConfig.endDate}</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Cloud className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Cloud Threshold</span>
+                  <span className="text-sm text-slate-800 font-medium">≤ {analysisConfig.cloudThreshold}%</span>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <Activity className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Analysis ID</span>
+                  <span className="text-sm text-slate-800 font-medium">{analysisId || analysisResult?.analysisId || "N/A"}</span>
                 </div>
               </div>
             </div>
-            <button
-              onClick={resetAnalysis}
-              className="border border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-700 font-semibold px-4 py-2 rounded-lg text-xs transition shadow-sm"
-            >
-              [ Change Analysis Area ]
-            </button>
           </div>
         )}
 
@@ -416,7 +450,7 @@ const GeoGuardian = () => {
                 <input type="range" min={5} max={80} step={5} value={cloudThresholdInput}
                   onChange={e => setCloudThresholdInput(Number(e.target.value))}
                   className="w-full accent-emerald-700" />
-                <div className="flex justify-between text-2xs text-slate-400 mt-0.5"><span>5%</span><span>80%</span></div>
+                <div className="flex justify-between gg-small-meta mt-0.5"><span>5%</span><span>80%</span></div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">
@@ -425,7 +459,7 @@ const GeoGuardian = () => {
                 <input type="range" min={0.05} max={0.30} step={0.01} value={changeThresholdInput}
                   onChange={e => setChangeThresholdInput(parseFloat(e.target.value))}
                   className="w-full accent-emerald-700" />
-                <div className="flex justify-between text-2xs text-slate-400 mt-0.5">
+                <div className="flex justify-between gg-small-meta mt-0.5">
                   <span>0.05</span><span className="text-slate-400 text-2xs">(decline difference ≤ −{changeThresholdInput.toFixed(2)})</span><span>0.30</span>
                 </div>
               </div>
@@ -533,7 +567,7 @@ const GeoGuardian = () => {
             {/* Progress indicator */}
             {analyzing && (
               <div className="mt-5 bg-slate-50 border border-slate-200 rounded-xl p-5">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Processing Pipeline</p>
+                <p className="gg-label mb-3">Processing Pipeline</p>
                 <LoadingStep steps={ANALYSIS_STEPS} current={analysisStep} />
               </div>
             )}
@@ -589,22 +623,95 @@ const GeoGuardian = () => {
                 valueColor="text-blue-700" />
             </div>
 
-            {/* Status */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col gap-3">
+            {/* Scientific Assessment Card */}
+            <div className="gg-card flex flex-col gap-6">
               <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Scientific Assessment</p>
-                <p className="text-sm font-semibold text-slate-800 leading-relaxed">
-                  {analysisResult.analysis.status}
-                </p>
+                <p className="gg-label mb-1">Scientific Assessment</p>
+                <h3 className="gg-section-title">Environmental Change Summary</h3>
               </div>
-              <div className="h-px bg-slate-100" />
-              <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
-                <div className="flex gap-4">
-                  <span><strong>Before Period:</strong> {analysisResult.analysis.beforeDate} (Mean NDVI: {analysisResult.analysis.beforeMeanNdvi.toFixed(4)})</span>
-                  <span><strong>After Period:</strong> {analysisResult.analysis.afterDate} (Mean NDVI: {analysisResult.analysis.afterMeanNdvi.toFixed(4)})</span>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                {/* KPI Value Card */}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 flex flex-col justify-center items-center text-center shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-amber-500" />
+                  <span className="gg-primary-kpi text-amber-600 mb-2">
+                    {analysisResult.analysis.changePercentage || analysisResult.analysis.affectedPercentage}%
+                  </span>
+                  <span className="gg-label text-amber-700 tracking-[0.05em]">
+                    {analysisResult.analysis.severity ? analysisResult.analysis.severity.toUpperCase() : "SIGNIFICANT"} DECLINE
+                  </span>
                 </div>
-                <div>
-                  <strong>Significant Decline Threshold:</strong> NDVI difference ≤ −{analysisResult.analysis.threshold?.toFixed(2)}
+
+                {/* Scientific Metrics Panel */}
+                <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3.5">
+                  <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+                    <span className="text-[13px] text-slate-500 font-medium">Monitored Area</span>
+                    <span className="text-[14px] font-semibold text-slate-800">
+                      {analysisResult.analysis.totalMonitoredAreaKm2.toFixed(4)} <span className="text-slate-400 font-normal">km²</span>
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+                    <span className="text-[13px] text-slate-500 font-medium">Decline Area</span>
+                    <span className="text-[14px] font-semibold text-slate-800">
+                      {analysisResult.analysis.changedAreaKm2.toFixed(4)} <span className="text-slate-400 font-normal">km²</span>
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+                    <span className="text-[13px] text-slate-500 font-medium">NDVI Change</span>
+                    <span className={`text-[14px] font-semibold ${analysisResult.analysis.ndviChange < 0 ? "text-red-600" : "text-emerald-700"}`}>
+                      {analysisResult.analysis.ndviChange >= 0 ? "+" : ""}{analysisResult.analysis.ndviChange.toFixed(4)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[13px] text-slate-500 font-medium">Relative Change</span>
+                    <span className={`text-[14px] font-semibold ${analysisResult.analysis.relativeChange < 0 ? "text-red-600" : "text-emerald-700"}`}>
+                      {analysisResult.analysis.relativeChange != null ? `${analysisResult.analysis.relativeChange > 0 ? "+" : ""}${analysisResult.analysis.relativeChange}%` : "—"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scientific Explanation */}
+              <div className="bg-slate-50/80 border border-slate-200 rounded-xl p-4 flex gap-3 mt-2">
+                <span className="text-[14px] text-slate-400 mt-0.5">ⓘ</span>
+                <div className="flex flex-col">
+                  <span className="text-[13px] font-bold text-slate-700 mb-1">Scientific Definition</span>
+                  <p className="text-[13px] leading-[1.6] text-slate-500">
+                    Significant local decline is defined as pixels with NDVI decrease greater than −{analysisConfig.changeThreshold.toFixed(2)} change threshold.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Status */}
+              <div className="bg-blue-50/50 border border-blue-200 rounded-xl p-5 flex gap-3 mt-2">
+                <span className="text-[14px] text-blue-500 mt-0.5">ⓘ</span>
+                <div className="flex flex-col">
+                  <span className="text-[13px] font-bold text-blue-900 mb-1">Scientific Interpretation</span>
+                  <p className="text-[13px] leading-[1.6] text-blue-800/80">
+                    {analysisResult.analysis.status}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-2 bg-slate-800 text-white p-5 rounded-xl">
+                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-center md:text-left">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mb-1">Before</span>
+                    <span className="font-mono text-sm">{analysisResult.analysis.beforeDate}</span>
+                    <span className="text-xs text-slate-300 mt-0.5">Mean NDVI: {analysisResult.analysis.beforeMeanNdvi.toFixed(4)}</span>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-slate-500 hidden md:block" />
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mb-1">After</span>
+                    <span className="font-mono text-sm">{analysisResult.analysis.afterDate}</span>
+                    <span className="text-xs text-slate-300 mt-0.5">Mean NDVI: {analysisResult.analysis.afterMeanNdvi.toFixed(4)}</span>
+                  </div>
+                </div>
+                <div className="h-px w-full md:h-12 md:w-px bg-slate-700" />
+                <div className="flex flex-col text-center md:text-right">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mb-1">Significant Decline Threshold</span>
+                  <span className="text-emerald-400 font-mono text-sm">NDVI diff ≤ −{analysisResult.analysis.threshold?.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -646,7 +753,7 @@ const GeoGuardian = () => {
                 {/* Map legend + stats */}
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">NDVI Legend</p>
+                    <p className="gg-label mb-3">NDVI Legend</p>
                     <div className="space-y-2 text-xs">
                       {[
                         { color: "bg-blue-500", label: "< 0", desc: "Water / non-vegetated" },
@@ -667,7 +774,7 @@ const GeoGuardian = () => {
 
                   {activeTab === "change" && (
                     <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Change Classification</p>
+                      <p className="gg-label mb-3">Change Classification</p>
                       <div className="space-y-2 text-xs">
                         {[
                           { color: "bg-emerald-500", label: "Stable", value: analysisResult.analysis.distribution?.stable?.toFixed(1) + "%" },
@@ -755,113 +862,113 @@ const GeoGuardian = () => {
             </section>
 
             {false && <>
-            <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-              <div className="flex items-start justify-between mb-5">
-                <SectionHeader title="Classification Accuracy Validation" subtitle="Performance metrics calculated strictly from validation/samples.json reference labels." icon={ShieldCheck} />
-                <button onClick={runValidation} disabled={validating}
-                  className="border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition flex-shrink-0">
-                  {validating ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Activity className="w-3.5 h-3.5" />}
-                  {validating ? "Evaluating…" : "Run Validation"}
-                </button>
-              </div>
+              <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                <div className="flex items-start justify-between mb-5">
+                  <SectionHeader title="Classification Accuracy Validation" subtitle="Performance metrics calculated strictly from validation/samples.json reference labels." icon={ShieldCheck} />
+                  <button onClick={runValidation} disabled={validating}
+                    className="border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition flex-shrink-0">
+                    {validating ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Activity className="w-3.5 h-3.5" />}
+                    {validating ? "Evaluating…" : "Run Validation"}
+                  </button>
+                </div>
 
-              {validationError && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-600 mb-4 flex gap-2">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" text-red-500 />
-                  {validationError}
-                </div>
-              )}
+                {validationError && (
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-600 mb-4 flex gap-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" text-red-500 />
+                    {validationError}
+                  </div>
+                )}
 
-              {!validationResult ? (
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
-                  <ShieldCheck className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                  <p className="text-slate-600 font-semibold text-sm">Validation status: Not evaluated</p>
-                  <p className="text-slate-400 text-sm mt-1">No validation metrics are shown until run validation completes successfully.</p>
-                  <div className="mt-4 flex justify-center gap-4 text-slate-500 font-mono text-2xs">
-                    <span>Accuracy: N/A</span>
-                    <span>Precision: N/A</span>
-                    <span>Recall: N/A</span>
-                    <span>F1 Score: N/A</span>
-                  </div>
-                </div>
-              ) : validationResult.status === "Not evaluated" ? (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
-                  <p className="text-amber-700 font-semibold text-sm flex items-center gap-2">
-                    <Info className="w-4 h-4" />
-                    Validation status: Not evaluated
-                  </p>
-                  <p className="text-amber-600 text-xs mt-2">
-                    Message: {validationResult.message || "Failed to process ground-truth verification samples."}
-                  </p>
-                  <div className="mt-4 flex gap-4 text-slate-500 font-mono text-2xs">
-                    <span>Accuracy: N/A</span>
-                    <span>Precision: N/A</span>
-                    <span>Recall: N/A</span>
-                    <span>F1 Score: N/A</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {validationResult.sampleSizeWarning && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 flex gap-2">
-                      <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                      <span><strong>Validation confidence: insufficient sample size.</strong> {validationResult.sampleSizeWarning}</span>
+                {!validationResult ? (
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
+                    <ShieldCheck className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600 font-semibold text-sm">Validation status: Not evaluated</p>
+                    <p className="text-slate-400 text-sm mt-1">No validation metrics are shown until run validation completes successfully.</p>
+                    <div className="mt-4 flex justify-center gap-4 text-slate-500 font-mono text-2xs">
+                      <span>Accuracy: N/A</span>
+                      <span>Precision: N/A</span>
+                      <span>Recall: N/A</span>
+                      <span>F1 Score: N/A</span>
                     </div>
-                  )}
-                  {/* Metrics grid */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    {[
-                      { label: "Accuracy", value: validationResult.metrics.accuracy },
-                      { label: "Precision", value: validationResult.metrics.precision },
-                      { label: "Recall", value: validationResult.metrics.recall },
-                      { label: "F1 Score", value: validationResult.metrics.f1Score }
-                    ].map(m => (
-                      <div key={m.label} className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{m.label}</p>
-                        <p className="text-2xl font-bold font-mono text-emerald-700">
-                          {m.value != null ? `${m.value}%` : "—"}
-                        </p>
+                  </div>
+                ) : validationResult.status === "Not evaluated" ? (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                    <p className="text-amber-700 font-semibold text-sm flex items-center gap-2">
+                      <Info className="w-4 h-4" />
+                      Validation status: Not evaluated
+                    </p>
+                    <p className="text-amber-600 text-xs mt-2">
+                      Message: {validationResult.message || "Failed to process ground-truth verification samples."}
+                    </p>
+                    <div className="mt-4 flex gap-4 text-slate-500 font-mono text-2xs">
+                      <span>Accuracy: N/A</span>
+                      <span>Precision: N/A</span>
+                      <span>Recall: N/A</span>
+                      <span>F1 Score: N/A</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {validationResult.sampleSizeWarning && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 flex gap-2">
+                        <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <span><strong>Validation confidence: insufficient sample size.</strong> {validationResult.sampleSizeWarning}</span>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                    {/* Metrics grid */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      {[
+                        { label: "Accuracy", value: validationResult.metrics.accuracy },
+                        { label: "Precision", value: validationResult.metrics.precision },
+                        { label: "Recall", value: validationResult.metrics.recall },
+                        { label: "F1 Score", value: validationResult.metrics.f1Score }
+                      ].map(m => (
+                        <div key={m.label} className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{m.label}</p>
+                          <p className="text-2xl font-bold font-mono text-emerald-700">
+                            {m.value != null ? `${m.value}%` : "—"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
 
-                  {/* Confusion matrix */}
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Confusion Matrix</p>
-                    <div className="overflow-x-auto">
-                      <table className="text-sm border-collapse w-full max-w-sm">
-                        <thead>
-                          <tr>
-                            <th className="p-2" />
-                            <th className="p-2 text-center text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Actual: Change</th>
-                            <th className="p-2 text-center text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Actual: Stable</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td className="p-2 text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Pred: Change</td>
-                            <td className="p-3 text-center font-mono font-bold text-emerald-700 border border-slate-200 bg-emerald-50">TP {validationResult.confusionMatrix.tp}</td>
-                            <td className="p-3 text-center font-mono font-bold text-red-600 border border-slate-200 bg-red-50">FP {validationResult.confusionMatrix.fp}</td>
-                          </tr>
-                          <tr>
-                            <td className="p-2 text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Pred: Stable</td>
-                            <td className="p-3 text-center font-mono font-bold text-amber-600 border border-slate-200 bg-amber-50">FN {validationResult.confusionMatrix.fn}</td>
-                            <td className="p-3 text-center font-mono font-bold text-emerald-700 border border-slate-200 bg-emerald-50">TN {validationResult.confusionMatrix.tn}</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    {/* Confusion matrix */}
+                    <div>
+                      <p className="gg-label mb-3">Confusion Matrix</p>
+                      <div className="overflow-x-auto">
+                        <table className="text-sm border-collapse w-full max-w-sm">
+                          <thead>
+                            <tr>
+                              <th className="p-2" />
+                              <th className="p-2 text-center text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Actual: Change</th>
+                              <th className="p-2 text-center text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Actual: Stable</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="p-2 text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Pred: Change</td>
+                              <td className="p-3 text-center font-mono font-bold text-emerald-700 border border-slate-200 bg-emerald-50">TP {validationResult.confusionMatrix.tp}</td>
+                              <td className="p-3 text-center font-mono font-bold text-red-600 border border-slate-200 bg-red-50">FP {validationResult.confusionMatrix.fp}</td>
+                            </tr>
+                            <tr>
+                              <td className="p-2 text-xs font-semibold text-slate-500 border border-slate-200 bg-slate-50">Pred: Stable</td>
+                              <td className="p-3 text-center font-mono font-bold text-amber-600 border border-slate-200 bg-amber-50">FN {validationResult.confusionMatrix.fn}</td>
+                              <td className="p-3 text-center font-mono font-bold text-emerald-700 border border-slate-200 bg-emerald-50">TN {validationResult.confusionMatrix.tn}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500 space-y-1">
+                      <p><span className="font-medium text-slate-700">Samples evaluated:</span> {validationResult.samplesEvaluated}</p>
+                      {validationResult.classCounts && <p><span className="font-medium text-slate-700">Class counts:</span> Actual Change {validationResult.classCounts.actualChange}, Actual Stable {validationResult.classCounts.actualStable}, Predicted Change {validationResult.classCounts.predictedChange}, Predicted Stable {validationResult.classCounts.predictedStable}</p>}
+                      <p><span className="font-medium text-slate-700">Reference dataset:</span> <code className="bg-white border border-slate-200 px-1 rounded">backend/validation/samples.json</code></p>
+                      <p><span className="font-medium text-slate-700">Change threshold used:</span> −{analysisConfig.changeThreshold.toFixed(2)} NDVI</p>
                     </div>
                   </div>
-
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500 space-y-1">
-                    <p><span className="font-medium text-slate-700">Samples evaluated:</span> {validationResult.samplesEvaluated}</p>
-                    {validationResult.classCounts && <p><span className="font-medium text-slate-700">Class counts:</span> Actual Change {validationResult.classCounts.actualChange}, Actual Stable {validationResult.classCounts.actualStable}, Predicted Change {validationResult.classCounts.predictedChange}, Predicted Stable {validationResult.classCounts.predictedStable}</p>}
-                    <p><span className="font-medium text-slate-700">Reference dataset:</span> <code className="bg-white border border-slate-200 px-1 rounded">backend/validation/samples.json</code></p>
-                    <p><span className="font-medium text-slate-700">Change threshold used:</span> −{analysisConfig.changeThreshold.toFixed(2)} NDVI</p>
-                  </div>
-                </div>
-              )}
-            </section>
+                )}
+              </section>
 
             </>}
             {/* Report */}
@@ -890,11 +997,13 @@ const GeoGuardian = () => {
           </>
         )}
 
-        {/* ── Scientific Disclaimer ─────────────────────────────────────────── */}
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 flex gap-4 items-start">
-          <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-700 leading-relaxed">
-            <span className="font-semibold">Scientific Note: </span>
+        {/* ── Scientific Interpretation ─────────────────────────────────────────── */}
+        <div className="bg-blue-50/50 border border-blue-200 rounded-2xl p-6 flex flex-col gap-3 shadow-sm">
+          <div className="flex items-center gap-2 text-blue-700">
+            <Info className="w-5 h-5 flex-shrink-0" />
+            <span className="font-bold text-[11px] uppercase tracking-widest">Scientific Interpretation</span>
+          </div>
+          <div className="text-[14px] text-blue-800 leading-relaxed pl-7">
             NDVI measures vegetation spectral response. A decrease in NDVI indicates vegetation change but does not by itself prove deforestation. Changes may result from seasonal variation, drought, fire, vegetation removal, agriculture, cloud contamination, or other environmental factors. Independent ground verification is required to determine the specific cause.
           </div>
         </div>

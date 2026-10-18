@@ -1,0 +1,127 @@
+{
+  "organic_carbon": {
+    "metric": "organic_carbon",
+    "unit": "%",
+    "reference_type": "range",
+    "reference_values": {
+      "minimum": 1.0,
+      "maximum": 5.0
+    },
+    "context": "Global agricultural soils general threshold",
+    "source": "FAO",
+    "source_id": "fao_soil_biodiversity_2020",
+    "source_url": "https://www.fao.org/documents/card/en/c/CB1928EN/",
+    "title": "State of Knowledge of Soil Biodiversity",
+    "year": 2020,
+    "notes": "Below 1.0% often indicates degraded soil health in temperate agricultural systems."
+  },
+  "soil_ph": {
+    "metric": "soil_ph",
+    "unit": "pH",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "context": "Soil pH",
+    "notes": "Optimal pH depends on crop and specific soil ecosystem."
+  },
+  "rainfall": {
+    "metric": "rainfall",
+    "unit": "mm",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "context": "Annual precipitation",
+    "notes": "Rainfall adequacy strictly depends on the ecosystem (e.g., desert vs rainforest)."
+  },
+  "temperature": {
+    "metric": "temperature",
+    "unit": "°C",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "context": "Mean temperature",
+    "notes": "Temperature impacts require local historical baselines."
+  },
+  "cropping_system": {
+    "metric": "cropping_system",
+    "reference_type": "categorical",
+    "reference_values": {
+      "monoculture": {
+        "status": "simplified",
+        "risk": "potential_habitat_pressure",
+        "reason": "Habitat simplification indicator. Reduces biodiversity and increases vulnerability."
+      },
+      "polyculture": {
+        "status": "normal",
+        "risk": "none_identified",
+        "reason": "Diverse cropping systems support biodiversity."
+      },
+      "agroforestry": {
+        "status": "elevated",
+        "risk": "none_identified",
+        "reason": "Complex structure supports high biodiversity."
+      }
+    },
+    "context": "Agricultural structure",
+    "source": "IPBES",
+    "source_id": "ipbes_global_assessment_2019",
+    "source_url": "https://www.ipbes.net/global-assessment",
+    "title": "Global Assessment Report on Biodiversity and Ecosystem Services",
+    "year": 2019
+  },
+  "land_use": {
+    "metric": "land_use",
+    "reference_type": "categorical",
+    "reference_values": {
+      "agriculture": {
+        "status": "context_dependent",
+        "risk": "undetermined",
+        "reason": "Agricultural land use effects on habitat require local evaluation."
+      },
+      "intensive_agriculture": {
+        "status": "degraded",
+        "risk": "potential_habitat_pressure",
+        "reason": "Intensive agriculture often drives habitat loss and soil degradation."
+      },
+      "urban": {
+        "status": "degraded",
+        "risk": "potential_fragmentation_pressure",
+        "reason": "Urbanization drives severe habitat fragmentation."
+      }
+    },
+    "context": "Land cover classification",
+    "source": "IPBES",
+    "source_id": "ipbes_global_assessment_2019",
+    "source_url": "https://www.ipbes.net/global-assessment",
+    "title": "Global Assessment Report on Biodiversity and Ecosystem Services",
+    "year": 2019
+  },
+  "species_richness": {
+    "metric": "species_richness",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "context": "Count of species",
+    "notes": "Expected richness depends entirely on the biome."
+  },
+  "habitat_diversity": {
+    "metric": "habitat_diversity",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "notes": "Context dependent."
+  },
+  "pollution": {
+    "metric": "pollution",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "notes": "Context dependent."
+  },
+  "deforestation": {
+    "metric": "deforestation",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "notes": "Context dependent."
+  },
+  "moisture": {
+    "metric": "moisture",
+    "reference_type": "context_dependent",
+    "reference_values": null,
+    "notes": "Depends on soil type and recent rainfall."
+  }
+}

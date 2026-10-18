@@ -4,6 +4,8 @@ import { ChallengeCard } from '../components/challenges/ChallengeCard';
 import { ChallengeProgress } from '../components/challenges/ChallengeProgress';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { PageLayout } from '../components/layout/PageLayout';
+import { FeatureHero } from '../components/ui/FeatureHero';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { getChallenges, updateChallenge, resetChallenges } from '../services/api';
 
@@ -61,20 +63,19 @@ export function Challenges() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">
-            Eco Challenges
-          </h1>
-          <p className="text-slate-500">
-            Take on challenges to build sustainable habits and earn points.
-          </p>
-        </div>
-        <Button variant="ghost" size="sm" onClick={handleReset}>
-          Reset All
-        </Button>
-      </div>
+    <PageLayout>
+      <FeatureHero
+        label="Take Action"
+        title="Turn Sustainable Actions Into Progress"
+        description="Take on gamified challenges to build long-lasting sustainable habits, earn points, and make a real difference."
+        imageUrl="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200&auto=format&fit=crop"
+        layout="split"
+        actions={
+          <Button variant="outline" className="bg-white" onClick={handleReset}>
+            Reset Challenges
+          </Button>
+        }
+      />
 
       {error && (
         <Card className="mb-6 border-red-200 bg-red-50">
@@ -82,19 +83,23 @@ export function Challenges() {
         </Card>
       )}
 
-      <div className="mb-8">
-        <ChallengeProgress challenges={challenges} />
-      </div>
+      <div className="grid lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-12">
+          <ChallengeProgress challenges={challenges} />
+        </div>
 
-      <div className="space-y-4">
-        {challenges.map((challenge) => (
-          <ChallengeCard
-            key={challenge.id}
-            challenge={challenge}
-            onUpdate={handleUpdate}
-          />
-        ))}
+        <div className="lg:col-span-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {challenges.map((challenge) => (
+              <ChallengeCard
+                key={challenge.id}
+                challenge={challenge}
+                onUpdate={handleUpdate}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

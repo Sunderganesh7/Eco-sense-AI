@@ -18,9 +18,8 @@ export function ChallengeCard({ challenge, onUpdate }: ChallengeCardProps) {
 
   return (
     <Card
-      className={`transition-all ${
-        challenge.completed ? 'opacity-75' : ''
-      }`}
+      className={`transition-all ${challenge.completed ? 'opacity-75' : ''
+        }`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
@@ -64,11 +63,10 @@ export function ChallengeCard({ challenge, onUpdate }: ChallengeCardProps) {
             )
           }
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onUpdate(challenge.id, !challenge.completed, challenge.completed ? 0 : 100); } }}
-          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
-            challenge.completed
+          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${challenge.completed
               ? 'border-emerald-500 bg-emerald-50 text-emerald-600'
               : 'border-slate-300 text-slate-400 hover:border-emerald-400 hover:text-emerald-500'
-          }`}
+            }`}
           aria-label={
             challenge.completed
               ? `Mark ${challenge.title} as incomplete`

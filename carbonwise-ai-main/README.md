@@ -507,4 +507,5 @@ Made with ❤️ in India 🇮🇳
 
 # 🌱 Building Technology for a Sustainable Future
 
-CarbonWise AI © 2026
+CarbonWise AI © 2026#   C a r b o n - F o o t p r i n t  
+ 

@@ -1,10 +1,10 @@
 // backend/controllers/geoguardianController.js
-import { 
-  searchSentinelScenes, 
-  fetchNdviData, 
-  processNdviStatistics, 
-  generateNdviColormap, 
-  generateChangeMap, 
+import {
+  searchSentinelScenes,
+  fetchNdviData,
+  processNdviStatistics,
+  generateNdviColormap,
+  generateChangeMap,
   classifyChangeFromMap,
   calculateBBoxAreaKm2
 } from "../services/geoguardianService.js";
@@ -51,14 +51,14 @@ const reverseGeocode = async (lat, lon) => {
     const addr = data.address;
     const parts = [];
     const suburb = addr.suburb || addr.neighbourhood || addr.village || addr.hamlet || null;
-    const city   = addr.town || addr.city || addr.municipality || addr.county || null;
-    const state  = addr.state || null;
+    const city = addr.town || addr.city || addr.municipality || addr.county || null;
+    const state = addr.state || null;
     const country = addr.country || null;
 
-    if (suburb)  parts.push(suburb);
+    if (suburb) parts.push(suburb);
     if (city && city !== suburb) parts.push(city);
     if (addr.state_district && addr.state_district !== city) parts.push(addr.state_district);
-    if (state)   parts.push(state);
+    if (state) parts.push(state);
     if (country) parts.push(country);
 
     const name = parts.length > 0 ? [...new Set(parts)].join(", ") : (data.display_name || "Location name unavailable");
@@ -403,8 +403,8 @@ System Assessment:           ${status || "Stable"}
 SCIENTIFIC INTERPRETATION
 ${"—".repeat(60)}
 ${affectedPercentage > 5
-  ? "A measurable decrease in the Normalized Difference Vegetation Index was detected across the selected monitoring period."
-  : "The monitored area shows stable or increasing vegetation conditions over the selected period."}
+        ? "A measurable decrease in the Normalized Difference Vegetation Index was detected across the selected monitoring period."
+        : "The monitored area shows stable or increasing vegetation conditions over the selected period."}
 
 IMPORTANT LIMITATIONS
 ${"—".repeat(60)}

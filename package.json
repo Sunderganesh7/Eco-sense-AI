@@ -3,16 +3,23 @@
   "version": "1.0.0",
   "description": "Eco Sense AI Unified Launcher",
   "scripts": {
-    "dev": "concurrently \"npm run dev:dashboard\" \"npm run dev:carbonwise\" \"npm run dev:geoguardian\" \"npm run dev:greenpath\" \"npm run dev:ecomind\"",
-    "dev:dashboard": "npx serve -p 8000 ./",
+    "dev": "node start.js",
+    "dev:dashboard": "vite",
     "dev:carbonwise": "cd carbonwise-ai-main && npm run dev",
     "dev:geoguardian": "cd geoguardian-main && npm run dev",
-    "dev:greenpath": "cd \"GreenPath AI\" && python app.py",
     "dev:ecomind": "concurrently \"npm run dev:ecomind:backend\" \"npm run dev:ecomind:frontend\"",
     "dev:ecomind:backend": "cd \"ECO MIND AI/backend\" && venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8001",
-    "dev:ecomind:frontend": "cd \"ECO MIND AI/frontend\" && npm run dev"
+    "dev:ecomind:frontend": "cd \"ECO MIND AI/frontend\" && npm run dev",
+    "dev:plantwise": "concurrently \"npm run dev:plantwise:backend\" \"npm run dev:plantwise:frontend\"",
+    "dev:plantwise:backend": "cd \"Plantwise AI/backend\" && venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8002",
+    "dev:plantwise:frontend": "cd \"Plantwise AI/frontend\" && npm run dev",
+    "dev:greenpath": "cd \"GreenPath AI/GreenPath AI\" && .venv\\Scripts\\python.exe app.py",
+    "dev:agrisense": "concurrently \"npm run dev:agrisense:backend\" \"npm run dev:agrisense:frontend\"",
+    "dev:agrisense:backend": "cd \"Agrisense AI/api\" && ..\\venv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8003",
+    "dev:agrisense:frontend": "cd \"Agrisense AI/apps/web\" && npm run dev"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "vite": "^8.3.1"
   }
 }

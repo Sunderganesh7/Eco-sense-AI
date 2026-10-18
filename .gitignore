@@ -1,9 +1,76 @@
-node_modules/
-.env
-.env.*
-!.env.example
-venv/
-.venv/
-__pycache__/
-*.pyc
-.git/
+# ==========================================
+# EcoSense AI Monorepo — Git Ignore Rules
+# ==========================================
+
+# Environment variables & secrets (keep .env.example templates)
+**/.env
+**/.env.*
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+!**/.env.example
+
+# Dependencies & Package Managers
+**/node_modules/
+**/.pnp
+**/.pnp.js
+
+# Python Virtual Environments & Bytecode
+**/venv/
+**/.venv/
+**/env/
+**/ENV/
+**/__pycache__/
+**/*.py[cod]
+*$py.class
+**/.pytest_cache/
+**/.mypy_cache/
+
+# Build Outputs & Bundles
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/.turbo/
+**/.parcel-cache/
+**/.cache/
+**/out/
+
+# Logs & Debugging
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# OS-generated files & Editor Artifacts
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+**/*.swp
+**/*.swo
+**/*~
+
+# Temporary Files, Dumps & Backups
+**/*.tmp
+**/*.temp
+**/*.bak
+**/*.backup
+**/*.dump
+**/*.sql.gz
+**/*.sql.dump
+
+# Private Keys & Credentials
+**/*.pem
+**/*.key
+**/*.id_rsa
+**/*.id_dsa
+**/*.keystore
+
+# Large files exceeding GitHub's 100MB limit
+**/GreenPath_AI_Sample_Files.zip

@@ -1,5 +1,5 @@
-// frontend/src/components/AnalysisCard.jsx individual card in grid .Individual card component displaying analysis summary
 import React from "react";
+import { MapPin, Satellite, Calendar, Target, ArrowRight } from "lucide-react";
 
 const AnalysisCard = ({ analysis, onView }) => {
   const formatDate = (dateString) => {
@@ -10,16 +10,16 @@ const AnalysisCard = ({ analysis, onView }) => {
     });
   };
 
-  const getSeverityColor = (severity) => {
-    switch (severity) {
+  const getSeverityStyle = (severity) => {
+    switch (severity?.toLowerCase()) {
       case "high":
-        return "#f44336";
+        return "bg-red-50 text-red-700 border-red-200";
       case "medium":
-        return "#ff9800";
+        return "bg-amber-50 text-amber-700 border-amber-200";
       case "low":
-        return "#4caf50";
+        return "bg-emerald-50 text-emerald-700 border-emerald-200";
       default:
-        return "#2196f3";
+        return "bg-blue-50 text-blue-700 border-blue-200";
     }
   };
 
@@ -29,186 +29,95 @@ const AnalysisCard = ({ analysis, onView }) => {
     return `(${west.toFixed(2)}, ${south.toFixed(2)})`;
   };
 
+  const isCompleted = analysis.status === "completed";
+
   return (
-    <div style={styles.card}>
-      <div style={styles.header}>
-        <h3 style={styles.title}>{analysis.title || "Satellite Analysis"}</h3>
-        <span style={styles.date}>{formatDate(analysis.createdAt)}</span>
-      </div>
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full overflow-hidden group">
+      <div className="h-1.5 w-full bg-emerald-600/90 group-hover:bg-emerald-500 transition-colors" />
 
-      <div style={styles.content}>
-        <p style={styles.description}>
-          {analysis.description || "No description provided"}
-        </p>
-
-        <div style={styles.metadata}>
-          <div style={styles.metaItem}>
-            <span style={styles.label}>📍 Location:</span>
-            <span style={styles.value}>{analysis.location || "Unknown"}</span>
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex justify-between items-start mb-4 gap-2">
+          <div className="flex-1 pr-2">
+            <h3 className="gg-section-title leading-[1.4] mb-1">
+              {analysis.title?.startsWith('Change Detection:') ? (
+                <>
+                  Change Detection:<br />
+                  <span className="inline-block mt-0.5">{analysis.title.replace('Change Detection: ', '')}</span>
+                </>
+              ) : (
+                analysis.title || "Satellite Analysis"
+              )}
+            </h3>
+            <p className="text-sm text-slate-500 leading-relaxed line-clamp-2">
+              {analysis.description || "No description provided"}
+            </p>
           </div>
+          <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap bg-slate-50 px-2 py-1 rounded-md border border-slate-100 flex-shrink-0">
+            {formatDate(analysis.createdAt)}
+          </span>
+        </div>
 
-          <div style={styles.metaItem}>
-            <span style={styles.label}>🛰️ Layer:</span>
-            <span style={styles.value} title={analysis.nasaLayer}>
-              {analysis.nasaLayer.substring(0, 25)}...
+        <div className="flex flex-col gap-3 mb-6 flex-1">
+          <div className="flex items-center gap-3">
+            <MapPin className="w-4 h-4 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+            <span className="text-[13px] text-slate-700 font-medium truncate" title={analysis.location || "Unknown"}>
+              {analysis.location || "Unknown"}
             </span>
           </div>
 
-          <div style={styles.metaItem}>
-            <span style={styles.label}>📊 Date:</span>
-            <span style={styles.value}>{formatDate(analysis.date)}</span>
+          <div className="flex items-center gap-3">
+            <Satellite className="w-4 h-4 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+            <span className="text-[13px] text-slate-700 font-medium truncate" title={analysis.nasaLayer}>
+              {analysis.nasaLayer}
+            </span>
           </div>
 
-          <div style={styles.metaItem}>
-            <span style={styles.label}>🎯 Area:</span>
-            <span style={styles.value}>{formatBBox(analysis.bbox)}</span>
+          <div className="flex items-center gap-3">
+            <Calendar className="w-4 h-4 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+            <span className="text-[13px] text-slate-700 font-medium">
+              {formatDate(analysis.date)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Target className="w-4 h-4 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+            <span className="text-[13px] font-mono text-slate-600 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">
+              {formatBBox(analysis.bbox)}
+            </span>
           </div>
         </div>
 
-        {analysis.analysis && analysis.analysis.changePercentage && (
-          <div style={styles.analysis}>
-            <div
-              style={{
-                ...styles.severityBadge,
-                backgroundColor: getSeverityColor(analysis.analysis.severity),
-              }}
-            >
-              {analysis.analysis.severity?.toUpperCase() || "N/A"}
+        {analysis.analysis && analysis.analysis.changePercentage != null && (
+          <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 mb-5 flex items-center justify-between">
+            <div className={`px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wider ${getSeverityStyle(analysis.analysis.severity)}`}>
+              <span className="mr-1.5 opacity-75">●</span>
+              {analysis.analysis.severity || "N/A"}
             </div>
-            <p style={styles.changeText}>
-              📈 Change: {analysis.analysis.changePercentage}%
-            </p>
+            <div className="gg-card-title">
+              Change: <span className="font-mono ml-1">{analysis.analysis.changePercentage}%</span>
+            </div>
           </div>
         )}
 
-        <div style={styles.status}>
-          <span
-            style={{
-              ...styles.statusBadge,
-              backgroundColor:
-                analysis.status === "completed" ? "#4caf50" : "#ff9800",
-            }}
+        <div className="mt-auto flex flex-col gap-4">
+          <div className="flex items-center">
+            <div className={`px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5 ${isCompleted ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${isCompleted ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`} />
+              {analysis.status?.toUpperCase() || "UNKNOWN"}
+            </div>
+          </div>
+
+          <button
+            onClick={onView}
+            className="w-full flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold transition-colors duration-200 group/btn"
           >
-            {analysis.status?.toUpperCase()}
-          </span>
+            View Details
+            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" strokeWidth={2.5} />
+          </button>
         </div>
       </div>
-
-      <button style={styles.button} onClick={onView}>
-        👁️ View Details
-      </button>
     </div>
   );
-};
-
-const styles = {
-  card: {
-    background: "white",
-    border: "1px solid #e0e0e0",
-    borderRadius: "8px",
-    padding: "16px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    transition: "transform 0.2s, box-shadow 0.2s",
-    cursor: "pointer",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: "12px",
-  },
-  title: {
-    margin: 0,
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: "#333",
-    flex: 1,
-  },
-  date: {
-    fontSize: "12px",
-    color: "#999",
-    whiteSpace: "nowrap",
-    marginLeft: "10px",
-  },
-  content: {
-    flex: 1,
-    marginBottom: "12px",
-  },
-  description: {
-    margin: 0,
-    fontSize: "13px",
-    color: "#666",
-    lineHeight: "1.4",
-    marginBottom: "12px",
-  },
-  metadata: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    fontSize: "12px",
-    marginBottom: "12px",
-  },
-  metaItem: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "4px 0",
-  },
-  label: {
-    color: "#666",
-    fontWeight: "500",
-  },
-  value: {
-    color: "#333",
-    textAlign: "right",
-    maxWidth: "150px",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
-  analysis: {
-    background: "#f5f5f5",
-    padding: "10px",
-    borderRadius: "6px",
-    marginBottom: "12px",
-  },
-  severityBadge: {
-    display: "inline-block",
-    color: "white",
-    padding: "4px 10px",
-    borderRadius: "4px",
-    fontSize: "11px",
-    fontWeight: "bold",
-    marginBottom: "8px",
-  },
-  changeText: {
-    margin: 0,
-    fontSize: "12px",
-    color: "#333",
-  },
-  status: {
-    marginBottom: "12px",
-  },
-  statusBadge: {
-    display: "inline-block",
-    color: "white",
-    padding: "4px 10px",
-    borderRadius: "4px",
-    fontSize: "11px",
-    fontWeight: "bold",
-  },
-  button: {
-    padding: "10px",
-    backgroundColor: "#2563eb",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "13px",
-    fontWeight: "bold",
-    transition: "background-color 0.2s",
-  },
 };
 
 export default AnalysisCard;

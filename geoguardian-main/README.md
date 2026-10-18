@@ -318,4 +318,3 @@ If you find GeoGuardian useful, please ⭐ this repository to show your support!
 
 ---
 
-**Made with ❤️ for our planet** 🌍

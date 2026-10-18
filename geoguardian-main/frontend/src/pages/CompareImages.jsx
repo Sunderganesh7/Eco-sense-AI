@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import { useAnalysis } from "../context/AnalysisContext";
 import { Link } from "react-router-dom";
 import { Search, Calendar, Map, Globe, Download, Satellite, AlertCircle, TrendingUp, BarChart3, BarChart2, RefreshCw, Save, Image } from "lucide-react";
+import FeatureHero from "../components/FeatureHero";
 import axios from "axios";
 import { resultMatchesConfig } from "../utils/analysisDataset";
+import config from "../config";
 
-const API = "";
+const API = config.API_URL;
 
 const CompareImages = () => {
   const {
@@ -33,7 +35,7 @@ const CompareImages = () => {
       setSaving(true);
       console.log("💾 Saving comparison analysis...");
       const a = analysisResult.analysis;
-      
+
       await axios.post(
         `${API}/api/analysis`,
         {
@@ -53,7 +55,7 @@ const CompareImages = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       alert("✅ Analysis saved to history!");
     } catch (err) {
       console.error("❌ Error saving analysis:", err);
@@ -70,34 +72,22 @@ const CompareImages = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-emerald-800 to-teal-700 text-white py-10 px-6 shadow-md">
-        <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Satellite className="w-8 h-8 text-emerald-300" />
-              <h1 className="text-3xl font-bold">Compare Satellite Images</h1>
-            </div>
-            <p className="text-emerald-100 text-sm">Review high-resolution Sentinel-2 observations side-by-side.</p>
-          </div>
-          {analysisConfig.bbox && (
-            <div className="bg-emerald-900/40 border border-emerald-500/30 rounded-lg p-3 text-xs max-w-sm">
-              <p className="font-semibold text-emerald-200">Active BBox Location</p>
-              <p className="font-mono text-emerald-100 mt-1">{analysisConfig.bbox}</p>
-            </div>
-          )}
-        </div>
-      </div>
+    <div className="min-h-screen bg-slate-50 pb-12">
+      <FeatureHero
+        icon={Satellite}
+        title="Compare Satellite Images"
+        description="Review Sentinel-2 observations from two dates side-by-side. Detect vegetation decline, land cover change, and environmental impact."
+        imageUrl="/compare_hero.jpg"
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        
+
         {/* Placeholder if no bounding box */}
         {!analysisConfig.bbox && (
           <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
             <Globe className="w-16 h-16 mx-auto text-slate-300 mb-4 animate-pulse" />
-            <h2 className="text-xl font-bold text-slate-800">Please select an analysis area.</h2>
+            <h2 className="gg-section-title">Please select an analysis area.</h2>
             <p className="text-slate-500 text-sm mt-2 max-w-md mx-auto">
               You must configure a bounding box and timeframe on the main GeoGuardian dashboard to view satellite comparisons.
             </p>
@@ -113,7 +103,7 @@ const CompareImages = () => {
         {analysisConfig.bbox && (
           <>
             <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Using Active Analysis Area</h3>
+              <h3 className="gg-label">Analysis Parameters</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm text-slate-700">
                 <div>
                   <span className="text-slate-400 block text-2xs uppercase">Location</span>
@@ -181,7 +171,7 @@ const CompareImages = () => {
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Before Panel */}
                   <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <h3 className="gg-section-title mb-4 flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-emerald-700" />
                       Before ({analysisResult.analysis.beforeDate})
                     </h3>
@@ -196,7 +186,7 @@ const CompareImages = () => {
                       ) : (
                         <div className="text-center text-slate-400 p-4">
                           <AlertCircle className="w-10 h-10 mx-auto text-amber-500 mb-2" />
-                          <p className="text-sm font-semibold text-slate-700">Imagery unavailable</p>
+                          <p className="gg-card-title">Imagery unavailable</p>
                           <p className="text-xs text-slate-400 mt-1">Satellite true color acquisition failed.</p>
                         </div>
                       )}
@@ -215,7 +205,7 @@ const CompareImages = () => {
 
                   {/* After Panel */}
                   <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <h3 className="gg-section-title mb-4 flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-emerald-700" />
                       After ({analysisResult.analysis.afterDate})
                     </h3>
@@ -230,7 +220,7 @@ const CompareImages = () => {
                       ) : (
                         <div className="text-center text-slate-400 p-4">
                           <AlertCircle className="w-10 h-10 mx-auto text-amber-500 mb-2" />
-                          <p className="text-sm font-semibold text-slate-700">Imagery unavailable</p>
+                          <p className="gg-card-title">Imagery unavailable</p>
                           <p className="text-xs text-slate-400 mt-1">Satellite true color acquisition failed.</p>
                         </div>
                       )}
@@ -249,8 +239,8 @@ const CompareImages = () => {
                 </div>
 
                 {/* Change Map & Stats */}
-                <div className="bg-white rounded-xl shadow-sm p-8 border border-slate-200 space-y-6">
-                  <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-4">
+                <div className="gg-card space-y-6">
+                  <h3 className="gg-section-title flex items-center gap-2 border-b border-slate-100 pb-4">
                     <Image className="w-6 h-6 text-emerald-700" />
                     Vegetation Change Classification map
                   </h3>
@@ -270,26 +260,66 @@ const CompareImages = () => {
 
                     {/* Stats details */}
                     <div className="space-y-4">
-                      <div className={`p-4 rounded-xl border ${getSeverityColor(analysisResult.analysis.affectedPercentage)}`}>
-                        <p className="text-3xl font-bold font-mono">{analysisResult.analysis.affectedPercentage}%</p>
-                        <p className="text-xs font-semibold uppercase tracking-wider mt-1">Significant local decline</p>
+                      {/* KPI Value Card */}
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 flex flex-col justify-center items-center text-center shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-amber-500" />
+                        <span className="gg-primary-kpi text-amber-600 mb-2">
+                          {analysisResult.analysis.affectedPercentage}%
+                        </span>
+                        <span className="gg-label text-amber-700 tracking-[0.05em]">
+                          SIGNIFICANT LOCAL DECLINE
+                        </span>
                       </div>
 
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
-                        <div className="flex justify-between"><span className="text-slate-500">Monitored Area</span><span className="font-semibold text-slate-800">{analysisResult.analysis.totalMonitoredAreaKm2.toFixed(4)} km²</span></div>
-                        <div className="flex justify-between"><span className="text-slate-500">Decline Area</span><span className="font-semibold text-red-600">{analysisResult.analysis.changedAreaKm2.toFixed(4)} km²</span></div>
-                        <div className="flex justify-between"><span className="text-slate-500">NDVI change</span><span className={`font-semibold ${analysisResult.analysis.ndviChange < 0 ? "text-red-600" : "text-emerald-700"}`}>{analysisResult.analysis.ndviChange >= 0 ? "+" : ""}{analysisResult.analysis.ndviChange.toFixed(4)}</span></div>
-                        <div className="flex justify-between"><span className="text-slate-500">Relative change</span><span className={`font-semibold ${analysisResult.analysis.relativeChange < 0 ? "text-red-600" : "text-emerald-700"}`}>{analysisResult.analysis.relativeChange >= 0 ? "+" : ""}{analysisResult.analysis.relativeChange}%</span></div>
+                      {/* Scientific Metrics Panel */}
+                      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3.5">
+                        <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+                          <span className="text-[13px] text-slate-500 font-medium">Monitored Area</span>
+                          <span className="text-[14px] font-semibold text-slate-800">
+                            {analysisResult.analysis.totalMonitoredAreaKm2.toFixed(4)} <span className="text-slate-400 font-normal">km²</span>
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+                          <span className="text-[13px] text-slate-500 font-medium">Decline Area</span>
+                          <span className="text-[14px] font-semibold text-slate-800">
+                            {analysisResult.analysis.changedAreaKm2.toFixed(4)} <span className="text-slate-400 font-normal">km²</span>
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+                          <span className="text-[13px] text-slate-500 font-medium">NDVI Change</span>
+                          <span className={`text-[14px] font-semibold ${analysisResult.analysis.ndviChange < 0 ? "text-red-600" : "text-emerald-700"}`}>
+                            {analysisResult.analysis.ndviChange >= 0 ? "+" : ""}{analysisResult.analysis.ndviChange.toFixed(4)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-[13px] text-slate-500 font-medium">Relative Change</span>
+                          <span className={`text-[14px] font-semibold ${analysisResult.analysis.relativeChange < 0 ? "text-red-600" : "text-emerald-700"}`}>
+                            {analysisResult.analysis.relativeChange >= 0 ? "+" : ""}{analysisResult.analysis.relativeChange}%
+                          </span>
+                        </div>
                       </div>
 
-                      <div className="text-2xs text-slate-400">
-                        ⓘ Significant local decline is defined as pixels with NDVI decrease greater than −{analysisResult.analysis.threshold} change threshold.
+                      {/* Scientific Explanation */}
+                      <div className="bg-slate-50/80 border border-slate-200 rounded-xl p-4 flex gap-3 mt-2">
+                        <span className="text-[14px] text-slate-400 mt-0.5">ⓘ</span>
+                        <div className="flex flex-col">
+                          <span className="text-[13px] font-bold text-slate-700 mb-1">Scientific Definition</span>
+                          <p className="text-[13px] leading-[1.6] text-slate-500">
+                            Significant local decline is defined as pixels with NDVI decrease greater than −{analysisResult.analysis.threshold} change threshold.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-700">
-                    <strong>Scientific Interpretation:</strong> {analysisResult.analysis.status}
+                  <div className="bg-blue-50/50 border border-blue-200 rounded-xl p-5 flex gap-3 mt-4">
+                    <span className="text-[14px] text-blue-500 mt-0.5">ⓘ</span>
+                    <div className="flex flex-col">
+                      <span className="text-[13px] font-bold text-blue-900 mb-1">Scientific Interpretation</span>
+                      <p className="text-[13px] leading-[1.6] text-blue-800/80">
+                        {analysisResult.analysis.status}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Save button */}

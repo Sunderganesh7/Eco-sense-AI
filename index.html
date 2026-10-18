@@ -1,89 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Sense AI - Intelligent Environmental Platform</title>
+
+    <!-- Preconnect to CDN origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Local styles: render-critical -->
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: non-blocking async load -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Caveat:wght@600;700&display=swap"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Caveat:wght@600;700&display=swap">
+    </noscript>
+
+    <!-- Font Awesome: non-blocking async load -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
 </head>
+
 <body>
     <div class="layout">
         <!-- LEFT SIDEBAR -->
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="brand">
-                    <div class="brand-icon-box">
-                        <i class="fa-solid fa-leaf"></i>
-                    </div>
-                    <div>
-                        <h2>Eco Sense AI</h2>
-                        <p>For a Greener Tomorrow</p>
-                    </div>
-                </div>
+            <!-- Subtle Environmental Background for Sidebar -->
+            <div class="sidebar-bg-effects">
+                <div class="sidebar-env-image"></div>
+                <div class="sidebar-bg-gradient"></div>
             </div>
 
-            <nav class="sidebar-nav">
-                <ul class="nav-group">
-                    <li><a href="#" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="http://localhost:5173" class="nav-item"><i class="fa-solid fa-leaf"></i> CarbonWise AI</a></li>
-                    <li><a href="http://localhost:3000" class="nav-item"><i class="fa-solid fa-earth-americas"></i> GeoGuardian</a></li>
-                    <li><a href="http://localhost:5000" class="nav-item"><i class="fa-solid fa-tree"></i> GreenPath AI</a></li>
-                    <li><a href="http://localhost:5174" class="nav-item"><i class="fa-solid fa-brain"></i> EcoMind AI</a></li>
-                </ul>
-
-                <hr class="divider">
-
-                <ul class="nav-group">
-                    <li><a href="#" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Analytics & Reports</a></li>
-                    <li><a href="#" class="nav-item"><i class="fa-solid fa-microchip"></i> AI Model Details</a></li>
-                    <li><a href="#" class="nav-item"><i class="fa-solid fa-cubes"></i> System Architecture</a></li>
-                    <li><a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Admin Console</a></li>
-                </ul>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="user-profile">
-                    <div class="avatar">D</div>
-                    <div class="user-info">
-                        <h4>Dr. Sunder Ganesh</h4>
-                        <p>Admin</p>
+            <div class="sidebar-content-wrapper">
+                <div class="sidebar-header">
+                    <div class="brand">
+                        <div class="brand-icon-box">
+                            <i class="fa-solid fa-leaf"></i>
+                        </div>
+                        <div>
+                            <h2>Eco Sense <span class="brand-highlight">AI</span></h2>
+                            <p>For a Greener Tomorrow</p>
+                        </div>
                     </div>
-                    <a href="#" class="sign-out-icon" title="Sign Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
                 </div>
-                <a href="#" class="sign-out-text"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+
+                <nav class="sidebar-nav">
+                    <!-- Dashboard Active Item -->
+                    <a href="#" class="nav-item-dashboard active">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <!-- AI Solutions Menu Group -->
+                    <ul class="nav-group-solutions">
+                        <li>
+                            <a href="http://localhost:5000" class="nav-item-solution">
+                                <div class="solution-content">
+                                    <i class="fa-solid fa-tree icon-module"></i> <span>GreenPath AI</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right chevron"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:3000" class="nav-item-solution">
+                                <div class="solution-content">
+                                    <i class="fa-solid fa-earth-americas icon-module"></i> <span>GeoGuardian</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right chevron"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:5173" class="nav-item-solution">
+                                <div class="solution-content">
+                                    <i class="fa-solid fa-leaf icon-module"></i> <span>CarbonWise AI</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right chevron"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:5174" class="nav-item-solution">
+                                <div class="solution-content">
+                                    <i class="fa-solid fa-brain icon-module"></i> <span>EcoMind AI</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right chevron"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:5175" class="nav-item-solution">
+                                <div class="solution-content">
+                                    <i class="fa-solid fa-seedling icon-module"></i> <span>PlantWise AI</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right chevron"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:5176" class="nav-item-solution">
+                                <div class="solution-content">
+                                    <i class="fa-solid fa-wheat-awn icon-module"></i> <span>AgriSense AI</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right chevron"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </aside>
 
         <!-- MAIN CONTENT AREA -->
         <div class="main-wrapper">
-            <!-- TOP HEADER -->
-            <header class="top-header">
-                <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" placeholder="Search features, data, or insights...">
-                    <span class="keyboard-hint">Ctrl + K</span>
-                </div>
-                <div class="header-actions">
-                    <div class="theme-toggle">
-                        <i class="fa-regular fa-sun"></i>
-                        <div class="toggle-switch"></div>
-                        <i class="fa-solid fa-moon"></i>
-                    </div>
-                    <button class="icon-btn notification-btn" aria-label="Notifications">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="badge"></span>
-                    </button>
-                </div>
-            </header>
-
             <main class="main-content">
                 <!-- HERO SECTION -->
                 <section class="hero">
                     <div class="hero-bg"></div>
                     <div class="hero-overlay"></div>
-                    
+
                     <div class="hero-left">
                         <div class="hero-label-container">
                             <span class="hero-label">WELCOME TO</span>
@@ -91,8 +131,9 @@
                         </div>
                         <h1 class="hero-title">Eco Sense <span class="highlight">AI</span></h1>
                         <h2 class="hero-subtitle">Intelligent Environmental Platform</h2>
-                        <p class="hero-desc">Combine the power of AI, satellite data, and real-world analytics to build a cleaner, greener and more sustainable tomorrow.</p>
-                        
+                        <p class="hero-desc">Combine the power of AI, satellite data, and real-world analytics to build
+                            a cleaner, greener and more sustainable tomorrow.</p>
+
                         <div class="hero-capabilities">
                             <div class="capability"><i class="fa-solid fa-leaf"></i> Analyze</div>
                             <div class="capability-divider"></div>
@@ -112,123 +153,177 @@
                     <div class="section-header">
                         <div>
                             <h2>Our AI-Powered Solutions</h2>
-                            <p>Explore our integrated tools to monitor, analyze and create a sustainable environment.</p>
+                            <p>Explore our integrated tools to monitor, analyze and create a sustainable environment.
+                            </p>
                         </div>
                         <a href="#" class="view-all-btn">View All Features <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
 
                     <div class="cards-grid">
-                        <!-- Card 1: CarbonWise AI -->
-                        <div class="feature-card card-carbonwise" onclick="window.location.href='http://localhost:5173'">
-                            <i class="fa-solid fa-leaf card-bg-icon"></i>
+                        <!-- Card 6: GreenPath AI -->
+                        <div class="feature-card card-greenpath" onclick="window.location.href='http://localhost:5000'">
+                            <img src="assets/images/features/card_greenpath.jpg" class="card-bg-image"
+                                alt="Satellite view of a lush green forest">
                             <div class="card-top">
-                                <div class="card-icon"><i class="fa-solid fa-leaf"></i></div>
+                                <div class="card-icon"><i class="fa-solid fa-tree"></i></div>
                                 <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
-                            <h3>CarbonWise AI</h3>
-                            <h4 class="card-tagline">Track. Understand. Act.</h4>
-                            <p class="card-desc">Calculate and analyze your carbon footprint with AI-powered insights, recommendations and reduction strategies.</p>
+                            <h3>GreenPath AI</h3>
+                            <h4 class="card-tagline">DETECT. ANALYZE. RESTORE.</h4>
+                            <p class="card-desc">AI-powered environmental intelligence for tree detection, green cover
+                                analysis, plantation planning, and ecosystem monitoring.</p>
                             <div class="tags">
-                                <span class="tag">Carbon Tracking</span>
-                                <span class="tag">AI Insights</span>
-                                <span class="tag">Sustainability</span>
+                                <span class="tag">Tree Detection</span>
+                                <span class="tag">Green Cover</span>
                             </div>
-                            <div class="card-action-link">Open CarbonWise AI <i class="fa-solid fa-arrow-right"></i></div>
                         </div>
 
                         <!-- Card 2: GeoGuardian -->
-                        <div class="feature-card card-geoguardian" onclick="window.location.href='http://localhost:3000'">
-                            <i class="fa-solid fa-globe card-bg-icon"></i>
+                        <div class="feature-card card-geoguardian"
+                            onclick="window.location.href='http://localhost:3000'">
+                            <img src="assets/images/features/card_geoguardian_satellite.jpg" class="card-bg-image"
+                                alt="Satellite observation background">
                             <div class="card-top">
                                 <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
                                 <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
                             <h3>GeoGuardian</h3>
                             <h4 class="card-tagline">Monitor. Analyze. Protect.</h4>
-                            <p class="card-desc">Use satellite and geospatial intelligence to detect environmental changes, monitor green cover and support conservation efforts.</p>
+                            <p class="card-desc">Use satellite and geospatial intelligence to detect environmental
+                                changes, monitor green cover and support conservation efforts.</p>
                             <div class="tags">
                                 <span class="tag">Satellite Analysis</span>
                                 <span class="tag">Change Detection</span>
-                                <span class="tag">Mapping</span>
                             </div>
-                            <div class="card-action-link">Open GeoGuardian <i class="fa-solid fa-arrow-right"></i></div>
                         </div>
 
-                        <!-- Card 3: GreenPath AI -->
-                        <div class="feature-card card-greenpath" onclick="window.location.href='http://localhost:5000'">
-                            <i class="fa-solid fa-tree card-bg-icon"></i>
+                        <!-- Card 1: CarbonWise AI -->
+                        <div class="feature-card card-carbonwise"
+                            onclick="window.location.href='http://localhost:5173'">
+                            <img src="assets/images/features/card_carbonwise.jpg" class="card-bg-image"
+                                alt="Carbon footprint background">
                             <div class="card-top">
-                                <div class="card-icon"><i class="fa-solid fa-tree"></i></div>
+                                <div class="card-icon"><i class="fa-solid fa-leaf"></i></div>
                                 <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
-                            <h3>GreenPath AI</h3>
-                            <h4 class="card-tagline">Plan. Simulate. Build.</h4>
-                            <p class="card-desc">Explore AI-powered environmental modeling, scenario simulations and sustainability planning for a better future.</p>
+                            <h3>CarbonWise AI</h3>
+                            <h4 class="card-tagline">Track. Understand. Act.</h4>
+                            <p class="card-desc">Calculate and analyze your carbon footprint with AI-powered insights,
+                                recommendations and reduction strategies.</p>
                             <div class="tags">
-                                <span class="tag">Environmental Modeling</span>
-                                <span class="tag">Simulations</span>
-                                <span class="tag">Planning</span>
+                                <span class="tag">Carbon Tracking</span>
+                                <span class="tag">AI Insights</span>
                             </div>
-                            <div class="card-action-link">Open GreenPath AI <i class="fa-solid fa-arrow-right"></i></div>
                         </div>
 
                         <!-- Card 4: EcoMind AI -->
                         <div class="feature-card card-ecomind" onclick="window.location.href='http://localhost:5174'">
-                            <i class="fa-solid fa-brain card-bg-icon"></i>
+                            <img src="assets/images/features/card_ecomind.jpg" class="card-bg-image"
+                                alt="AI environmental science background">
                             <div class="card-top">
                                 <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
                                 <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
                             <h3>EcoMind AI</h3>
                             <h4 class="card-tagline">Reason. Evidence. Recommend.</h4>
-                            <p class="card-desc">AI Environmental Scientist that provides data-driven reasoning, evidence analysis, and environmental risk assessment.</p>
+                            <p class="card-desc">AI Environmental Scientist that provides data-driven reasoning,
+                                evidence analysis, and environmental risk assessment.</p>
                             <div class="tags">
                                 <span class="tag">AI Scientist</span>
                                 <span class="tag">Evidence</span>
-                                <span class="tag">Risk Analysis</span>
                             </div>
-                            <div class="card-action-link">Open EcoMind AI <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+
+                        <!-- Card 5: PlantWise AI -->
+                        <div class="feature-card card-plantwise" onclick="window.location.href='http://localhost:5175'">
+                            <img src="assets/images/features/card_plantwise.jpg" class="card-bg-image"
+                                alt="Tree plantation background">
+                            <div class="card-top">
+                                <div class="card-icon"><i class="fa-solid fa-seedling"></i></div>
+                                <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+                            <h3>PlantWise AI</h3>
+                            <h4 class="card-tagline">Evaluate. Comply. Plant.</h4>
+                            <p class="card-desc">Navigate environmental regulations and receive tailored plantation
+                                recommendations.</p>
+                            <div class="tags">
+                                <span class="tag">Compliance</span>
+                                <span class="tag">Plantation</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: AgriSense AI -->
+                        <div class="feature-card card-agrisense" onclick="window.location.href='http://localhost:5176'">
+                            <img src="assets/images/features/card_agrisense.jpg" class="card-bg-image"
+                                alt="Aerial view of agricultural farmland">
+                            <div class="card-top">
+                                <div class="card-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+                                <div class="card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+                            <h3>AgriSense AI</h3>
+                            <h4 class="card-tagline">Grow. Predict. Prosper.</h4>
+                            <p class="card-desc">AI-powered smart agriculture with crop recommendation, yield
+                                prediction, disease detection, and market price forecasting.</p>
+                            <div class="tags">
+                                <span class="tag">Crop Advisory</span>
+                                <span class="tag">Smart Farming</span>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- STATISTICS STRIP -->
-                <section class="statistics">
-                    <div class="stat-item">
-                        <div class="stat-icon carbon-text"><i class="fa-solid fa-leaf"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-value">10K+</div>
-                            <div class="stat-label">Trees Monitored</div>
+                <!-- TECHNOLOGY FOR A GREENER TOMORROW STRIP -->
+                <section class="tech-strip" aria-label="Technology for a Greener Tomorrow">
+                    <div class="tech-strip-header">
+                        <div class="tech-strip-title-wrapper">
+                            <span class="tech-strip-dot"></span>
+                            <h3 class="tech-strip-title">Technology for a Greener Tomorrow</h3>
                         </div>
+                        <p class="tech-strip-subtitle">Turning environmental data into meaningful action.</p>
                     </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-icon carbon-text"><i class="fa-solid fa-cloud"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-value">25K+</div>
-                            <div class="stat-label">Tonnes CO₂ Analyzed</div>
+
+                    <div class="tech-items-row">
+                        <!-- 1. Earth Intelligence -->
+                        <div class="tech-item">
+                            <div class="tech-icon"><i class="fa-solid fa-earth-americas"></i></div>
+                            <div class="tech-content">
+                                <h4 class="tech-heading">Earth Intelligence</h4>
+                                <p class="tech-desc">Satellite-based environmental observation.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-icon carbon-text"><i class="fa-solid fa-satellite-dish"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-value">500+</div>
-                            <div class="stat-label">Satellite Images Processed</div>
+
+                        <div class="tech-divider" aria-hidden="true"></div>
+
+                        <!-- 2. Data-Driven Decisions -->
+                        <div class="tech-item">
+                            <div class="tech-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                            <div class="tech-content">
+                                <h4 class="tech-heading">Data-Driven Decisions</h4>
+                                <p class="tech-desc">Environmental data transformed into actionable insights.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-icon carbon-text"><i class="fa-solid fa-users"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-value">1K+</div>
-                            <div class="stat-label">Active Users</div>
+
+                        <div class="tech-divider" aria-hidden="true"></div>
+
+                        <!-- 3. Proactive Protection -->
+                        <div class="tech-item">
+                            <div class="tech-icon"><i class="fa-solid fa-shield"></i></div>
+                            <div class="tech-content">
+                                <h4 class="tech-heading">Proactive Protection</h4>
+                                <p class="tech-desc">Environmental risk identification and assessment.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-quote">
-                        <p>"Small actions. Big impact."</p>
-                        <span>— Eco Sense AI</span>
+
+                        <div class="tech-divider" aria-hidden="true"></div>
+
+                        <!-- 4. Sustainable Futures -->
+                        <div class="tech-item">
+                            <div class="tech-icon"><i class="fa-solid fa-seedling"></i></div>
+                            <div class="tech-content">
+                                <h4 class="tech-heading">Sustainable Futures</h4>
+                                <p class="tech-desc">Technology supporting informed sustainability decisions.</p>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -236,4 +331,5 @@
         </div>
     </div>
 </body>
+
 </html>

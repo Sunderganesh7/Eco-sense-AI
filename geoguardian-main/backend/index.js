@@ -57,7 +57,7 @@ startScheduler();
 
 // ✅ Health check for API
 app.get("/api/health", (req, res) => {
-  res.json({ 
+  res.json({
     status: "OK",
     message: "Backend is healthy",
     timestamp: new Date().toISOString()
@@ -107,7 +107,7 @@ connectDB()
     app.listen(PORT, () => {
       console.log(`
 ==================================================
- GREEN PATH AI
+ GEOGUARDIAN API
 ==================================================
 
 Application running successfully.

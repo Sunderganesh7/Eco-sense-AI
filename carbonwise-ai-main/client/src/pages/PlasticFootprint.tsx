@@ -4,6 +4,8 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Slider } from '../components/ui/Slider';
 import { Badge } from '../components/ui/Badge';
+import { PageLayout } from '../components/layout/PageLayout';
+import { FeatureHero } from '../components/ui/FeatureHero';
 import { formatEmissions } from '../utils/format';
 import { calculatePlasticFootprint, generatePlasticAlternatives } from '../utils/plasticCalculations';
 
@@ -28,11 +30,14 @@ export function PlasticFootprint() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">Plastic Footprint Analyzer</h1>
-        <p className="text-slate-500">Estimate your weekly plastic waste and discover eco-friendly alternatives.</p>
-      </div>
+    <PageLayout>
+      <FeatureHero 
+        label="Waste Analysis"
+        title="Plastic Footprint Analyzer"
+        description="Estimate your weekly plastic waste and discover actionable, eco-friendly alternatives to reduce your environmental impact."
+        imageUrl="https://images.unsplash.com/photo-1532996122724-e3c354a0b15f?q=80&w=1200&auto=format&fit=crop"
+        layout="split"
+      />
       <Card>
         <div className="space-y-6">
           <h3 className="text-base font-semibold text-slate-800">Weekly Plastic Usage</h3>
@@ -46,7 +51,7 @@ export function PlasticFootprint() {
           <Button onClick={handleCalculate}>Analyze Plastic Footprint</Button>
         </div>
       </Card>
-    </div>
+    </PageLayout>
   );
 }
 
@@ -59,11 +64,14 @@ function PlasticResults({ input, result, onReset }: { input: PlasticInput; resul
   const monthlyPlastic = result.totalPlasticKg * 4.33;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">Your Plastic Footprint</h1>
-        <p className="text-slate-500">Comprehensive analysis of your plastic waste impact.</p>
-      </div>
+    <PageLayout>
+      <FeatureHero 
+        label="Waste Analysis Results"
+        title="Your Plastic Footprint"
+        description="Comprehensive analysis of your plastic waste impact and customized alternatives."
+        imageUrl="https://images.unsplash.com/photo-1532996122724-e3c354a0b15f?q=80&w=1200&auto=format&fit=crop"
+        layout="split"
+      />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -119,6 +127,6 @@ function PlasticResults({ input, result, onReset }: { input: PlasticInput; resul
         <Button variant="outline" onClick={onReset}>Calculate Again</Button>
         <Button onClick={() => window.location.href = '/calculator'}>Full Carbon Calculator</Button>
       </div>
-    </div>
+    </PageLayout>
   );
 }

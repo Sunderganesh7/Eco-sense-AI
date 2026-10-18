@@ -26,37 +26,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   lifestyle: 'Lifestyle',
 };
 
-const CATEGORY_ICONS: Record<string, JSX.Element> = {
-  transportation: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />, // simplified, let's use a car-like or generic transport icon
-  energy: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />,
-  food: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />, 
-  lifestyle: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />,
-};
-
-// Update icons specifically for the list
-const TransportIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7a4 4 0 108 0M8 7v1m8-1v1M8 15a4 4 0 108 0M8 15v1m8-1v1M4 20h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-);
-const EnergyIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-);
-const FoodIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-);
-const LifestyleIcon = () => (
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-);
-
-const getIcon = (key: string) => {
-  switch (key) {
-    case 'transportation': return <TransportIcon />;
-    case 'energy': return <EnergyIcon />;
-    case 'food': return <FoodIcon />;
-    case 'lifestyle': return <LifestyleIcon />;
-    default: return <LifestyleIcon />;
-  }
-};
-
 export const EmissionBreakdown = memo(function EmissionBreakdown({ result }: EmissionBreakdownProps) {
   const data = useMemo(
     () =>
@@ -90,7 +59,7 @@ export const EmissionBreakdown = memo(function EmissionBreakdown({ result }: Emi
             </p>
           </div>
         </div>
-        
+
         {/* Dropdown styling */}
         <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-slate-600 shadow-sm cursor-pointer hover:bg-slate-50">
           This Month
@@ -133,7 +102,7 @@ export const EmissionBreakdown = memo(function EmissionBreakdown({ result }: Emi
               />
             </PieChart>
           </ResponsiveContainer>
-          
+
           {/* Centered Total */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-[22px] font-extrabold text-slate-900 leading-none mb-1">
@@ -146,26 +115,24 @@ export const EmissionBreakdown = memo(function EmissionBreakdown({ result }: Emi
         </div>
 
         {/* Legend / List */}
-        <div className="flex-1 w-full space-y-4 pr-2">
+        <div className="flex-1 w-full space-y-4 pr-4">
           {data.map((item) => {
             const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
             return (
               <div key={item.name} className="flex items-center justify-between group">
-                <div className="flex items-center gap-3">
-                  <div 
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-opacity-10 transition-colors"
-                    style={{ backgroundColor: `${item.color}15`, color: item.color }}
-                  >
-                    {getIcon(item.key)}
-                  </div>
-                  <span className="text-[14px] font-semibold text-slate-700">{item.name}</span>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: item.color }}
+                  ></div>
+                  <span className="text-[13px] font-bold text-slate-800 w-24">{item.name}</span>
                 </div>
-                <div className="text-right flex items-center gap-3">
-                  <span className="text-[14px] font-bold text-slate-900">
-                    {item.value.toFixed(1)} kg
+                <div className="flex items-center justify-between flex-1 ml-4">
+                  <span className="text-[13px] font-extrabold text-slate-900 w-16 text-right">
+                    {percentage}%
                   </span>
-                  <span className="text-[12px] font-medium text-slate-400 w-12 text-right">
-                    ({percentage}%)
+                  <span className="text-[13px] font-medium text-slate-500 text-right w-16">
+                    {item.value.toFixed(1)} kg
                   </span>
                 </div>
               </div>

@@ -42,11 +42,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="mt-6 sticky bottom-0 left-0 w-full bg-white border-t border-gray-200 pt-4 pb-6">
+    <div className="w-full">
       <div className="flex gap-3 items-end">
         <textarea
           ref={textareaRef}
-          className="flex-1 rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white disabled:opacity-50 resize-none transition-colors shadow-sm"
+          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[15px] text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white disabled:opacity-50 resize-none transition-colors shadow-[0_2px_8px_rgb(0,0,0,0.02)]"
           rows={1}
           placeholder={placeholder}
           value={input}
@@ -59,15 +59,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           type="button"
           onClick={handleSend}
           disabled={disabled || !input.trim()}
-          className="flex items-center justify-center w-11 h-11 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm flex-shrink-0"
+          className="flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm flex-shrink-0"
           aria-label="Send message"
         >
           <RiSendPlaneFill size={20} />
         </button>
       </div>
-      <p className="text-xs text-gray-400 mt-2 text-center">
-        Press <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> to send &nbsp;·&nbsp;
-        <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Shift+Enter</kbd> for new line
+      <p className="text-[11px] text-slate-400 mt-2.5 text-center font-medium tracking-wide">
+        Press <kbd className="px-1.5 py-0.5 bg-slate-100 rounded text-[10px]">Enter</kbd> to send &nbsp;·&nbsp;
+        <kbd className="px-1.5 py-0.5 bg-slate-100 rounded text-[10px]">Shift+Enter</kbd> for new line
       </p>
     </div>
   );

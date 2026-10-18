@@ -28,7 +28,7 @@ export const searchSentinelScenes = async (bbox, startDate, endDate, maxCloudCov
     };
 
     console.info("🔍 Querying Copernicus Catalog API with bbox:", payload.bbox, "date range:", payload.datetime);
-    
+
     const response = await axios.post(SENTINEL_CATALOG_URL, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -74,7 +74,7 @@ export const searchSentinelScenes = async (bbox, startDate, endDate, maxCloudCov
 export const fetchNdviData = async (date, bbox, width = 512, height = 512) => {
   const dateObj = new Date(`${date}T00:00:00Z`);
   const [minLon, minLat, maxLon, maxLat] = bbox.map(Number);
-  
+
   // Create a tight 3-day query window around target date to guarantee capture
   const fromDate = new Date(dateObj.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const toDate = new Date(dateObj.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -168,7 +168,7 @@ export const processNdviStatistics = async (imageBuffer) => {
 
       if (g > 128) { // Valid pixel (not cloudy or edge no-data)
         const ndvi = (r / 255) * 2 - 1;
-        
+
         // Scientific validation: clamp NDVI strictly between -1.0 and 1.0
         const clampedNdvi = Math.min(1.0, Math.max(-1.0, ndvi));
         ndviValues[pixelIndex] = clampedNdvi;
@@ -353,7 +353,7 @@ export const calculateBBoxAreaKm2 = (bbox) => {
   const lat1Rad = (minLat * Math.PI) / 180;
   const lat2Rad = (maxLat * Math.PI) / 180;
   const lonDiff = Math.abs(maxLon - minLon);
-  
+
   // Area = (pi/180) * R^2 * |sin(lat1) - sin(lat2)| * |lonDiff|
   const area = (Math.PI / 180) * R * R * Math.abs(Math.sin(lat1Rad) - Math.sin(lat2Rad)) * lonDiff;
   return parseFloat(area.toFixed(4));
@@ -395,7 +395,7 @@ export const validateChangeDetection = (beforeStats, afterStats, threshold = 0.1
     const bVal = beforeNdvi[idx];
     const aVal = afterNdvi[idx];
     const diff = aVal - bVal;
-    
+
     const changePredicted = diff <= -threshold;
 
     if (changePredicted && changeExpected) tp++;
@@ -444,7 +444,7 @@ export const evaluateValidationDataset = async (threshold = 0.1) => {
     for (const sample of samples) {
       try {
         console.info(`Evaluating validation sample ${sample.id}...`);
-        
+
         // Fetch low-res 64x64 maps to save quota and speed up check
         const beforeRaw = await fetchNdviData(sample.beforeDate, sample.bbox, 64, 64);
         const beforeStats = await processNdviStatistics(beforeRaw);

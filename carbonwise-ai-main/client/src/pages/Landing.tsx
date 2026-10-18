@@ -73,21 +73,21 @@ export function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans flex flex-col">
       {/* CINEMATIC HERO */}
-      <section className="relative w-full h-[600px] sm:h-[650px] lg:h-[700px] overflow-hidden flex items-center">
+      <section className="relative w-full min-h-[100vh] overflow-hidden flex items-center">
         {/* Background Image */}
-        <div 
+        <div
           className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2500&auto=format&fit=crop')" }}
+          style={{ backgroundImage: "url('/carbonwise_sustainable_hero.jpg')" }}
         />
-        
+
         {/* Gradient Overlay for Text Readability - Darker on left, fading right */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-transparent" />
-        
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0b1519] via-[#0b1519]/60 to-transparent" />
+
         <div className="relative z-20 mx-auto max-w-[1600px] px-6 sm:px-10 lg:px-12 w-full h-full flex items-center">
           <div className="w-full flex justify-between items-end pb-12">
-            
+
             {/* Left Side Content */}
             <div className="max-w-2xl mt-12">
               {/* Label */}
@@ -182,7 +182,7 @@ export function Landing() {
           {/* Feature Grid - Horizontal Cards */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <div 
+              <div
                 key={feature.title}
                 onClick={() => navigate(feature.route)}
                 className={`group cursor-pointer rounded-2xl border ${feature.cardBorder} ${feature.cardBg} p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 relative overflow-hidden`}
@@ -237,7 +237,7 @@ export function Landing() {
             {/* Content Left */}
             <div className="relative z-10 mb-6 md:mb-0 flex items-center gap-6">
               <div className="hidden sm:flex shrink-0 w-12 h-12 rounded-xl bg-emerald-500/20 items-center justify-center text-emerald-300 backdrop-blur-sm border border-emerald-400/20">
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path></svg>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path></svg>
               </div>
               <div className="max-w-xl">
                 <h2 className="text-[22px] font-bold text-white tracking-tight mb-1.5">
@@ -258,16 +258,16 @@ export function Landing() {
                 Get Started Now
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </button>
-              
+
               {/* Divider */}
               <div className="hidden lg:block w-[1px] h-12 bg-emerald-400/30"></div>
 
               {/* Right text box */}
               <div className="hidden lg:flex items-center gap-3 text-emerald-100 pr-4">
-                 <svg className="w-5 h-5 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path></svg>
-                 <div className="text-[12px] font-medium leading-tight">
-                   Small Actions.<br/>Big Impact.
-                 </div>
+                <svg className="w-5 h-5 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path></svg>
+                <div className="text-[12px] font-medium leading-tight">
+                  Small Actions.<br />Big Impact.
+                </div>
               </div>
             </div>
 

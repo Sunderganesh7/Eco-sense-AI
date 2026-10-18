@@ -1,0 +1,21 @@
+import os
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    PROJECT_NAME: str = "GreenPermit AI Backend"
+    VERSION: str = "1.0.0"
+    API_PREFIX: str = "/api"
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./greenpermit.db")
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "*"
+    ]
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+
+    class Config:
+        case_sensitive = True
+
+settings = Settings()

@@ -6,6 +6,8 @@ import { SimulatorControls } from '../components/simulator/SimulatorControls';
 import { SimulationResults } from '../components/simulator/SimulationResults';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { PageLayout } from '../components/layout/PageLayout';
+import { FeatureHero } from '../components/ui/FeatureHero';
 import type { CarbonInput } from '../types';
 
 function EmptySimulatorState({ onNavigate }: { onNavigate: () => void }) {
@@ -53,35 +55,34 @@ export function Simulator() {
   const handleNavigate = useCallback(() => navigate('/calculator'), [navigate]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">
-          Carbon Reduction Simulator
-        </h1>
-        <p className="text-slate-500">
-          Adjust sliders to see how lifestyle changes affect your carbon footprint in real time.
-        </p>
-      </div>
+    <PageLayout>
+      <FeatureHero
+        label="Simulate Impact"
+        title="Reduction Simulator"
+        description="See how your everyday choices can drastically change your carbon footprint. Adjust variables below and visualize the environmental impact of going green."
+        imageUrl="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=1200&auto=format&fit=crop"
+        layout="split"
+      />
 
       {!latestEntry && <EmptySimulatorState onNavigate={handleNavigate} />}
 
-      <div className="grid gap-8 lg:grid-cols-5">
-        <div className="lg:col-span-3">
-          <Card>
+      {latestEntry && (
+        <div className="grid gap-8 lg:grid-cols-12 items-start">
+          <div className="lg:col-span-8 space-y-6">
             <SimulatorControls
               input={input}
               onFieldChange={handleFieldChange}
             />
-          </Card>
+          </div>
+          <div className="lg:col-span-4 sticky top-6">
+            <SimulationResults
+              currentResult={currentResult}
+              savings={savings}
+              savingsPercentage={savingsPercentage}
+            />
+          </div>
         </div>
-        <div className="lg:col-span-2">
-          <SimulationResults
-            currentResult={currentResult}
-            savings={savings}
-            savingsPercentage={savingsPercentage}
-          />
-        </div>
-      </div>
-    </div>
+      )}
+    </PageLayout>
   );
 }

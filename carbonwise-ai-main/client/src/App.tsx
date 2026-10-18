@@ -25,6 +25,9 @@ const Challenges = lazy(() =>
 const PlasticFootprint = lazy(() =>
   import('./pages/PlasticFootprint').then((m) => ({ default: m.PlasticFootprint })),
 );
+const SustainabilityScore = lazy(() =>
+  import('./pages/SustainabilityScore').then((m) => ({ default: m.SustainabilityScore })),
+);
 const EventPlanner = lazy(() =>
   import('./pages/EventPlanner').then((m) => ({ default: m.EventPlanner })),
 );
@@ -51,6 +54,7 @@ export default function App() {
               <Route path="/ai-coach" element={<AICoach />} />
               <Route path="/challenges" element={<Challenges />} />
               <Route path="/plastic-footprint" element={<PlasticFootprint />} />
+              <Route path="/sustainability-score" element={<SustainabilityScore />} />
               <Route path="/event-planner" element={<EventPlanner />} />
               <Route
                 path="*"

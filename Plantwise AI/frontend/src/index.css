@@ -1,0 +1,100 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #f8faf7;
+    --color-card: #ffffff;
+    --color-card-subtle: #f2f6f2;
+    --color-border: #e2e8e2;
+    --color-border-hover: #c4d3c6;
+    --color-text-primary: #131f16;
+    --color-text-secondary: #506154;
+    --color-text-muted: #728477;
+    
+    --color-forest-50: #f2f8f4;
+    --color-forest-100: #e1f0e6;
+    --color-forest-500: #3d9258;
+    --color-forest-600: #2d7744;
+    --color-forest-700: #245e37;
+    --color-forest-800: #1f4b2e;
+    --color-forest-900: #1a3e27;
+
+    --color-earth-50: #fdfaf6;
+    --color-earth-100: #f8f1e7;
+    --color-earth-500: #bd8958;
+    --color-earth-700: #835234;
+    --color-earth-900: #583726;
+  }
+
+  .dark {
+    --color-bg: #0d120f;
+    --color-card: #141a15;
+    --color-card-subtle: #19221b;
+    --color-border: #232f25;
+    --color-border-hover: #324335;
+    --color-text-primary: #edf3ee;
+    --color-text-secondary: #97a69b;
+    --color-text-muted: #6e7d72;
+
+    --color-forest-50: #142218;
+    --color-forest-100: #1a3122;
+    --color-forest-500: #4ba668;
+    --color-forest-600: #3d9258;
+    --color-forest-700: #2d7744;
+    --color-forest-800: #245e37;
+    --color-forest-900: #1f4b2e;
+
+    --color-earth-50: #211913;
+    --color-earth-100: #2c211a;
+    --color-earth-500: #cca380;
+    --color-earth-700: #b87e53;
+    --color-earth-900: #a36d40;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    @apply font-sans antialiased min-h-screen transition-colors duration-150;
+  }
+}
+
+/* Subtle, clean scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-stone-300 dark:bg-stone-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-stone-400 dark:bg-stone-600;
+}
+
+/* Leaflet map custom container */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  z-index: 10;
+  font-family: inherit;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

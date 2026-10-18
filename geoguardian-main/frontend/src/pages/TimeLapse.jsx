@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAnalysis } from "../context/AnalysisContext";
 import { Link } from "react-router-dom";
 import { Film, Calendar, Globe, Map, Sliders, Play, Pause, ChevronLeft, ChevronRight, AlertCircle, Info, Flame, Sprout, Trees, RefreshCw } from "lucide-react";
+import FeatureHero from "../components/FeatureHero";
 import axios from "axios";
 import config from "../config";
 
@@ -136,34 +137,22 @@ const TimeLapse = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-emerald-800 to-teal-700 text-white py-10 px-6 shadow-md">
-        <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Film className="w-8 h-8 text-emerald-300" />
-              <h1 className="text-3xl font-bold">Time-Lapse Generator</h1>
-            </div>
-            <p className="text-emerald-100 text-sm">Create interactive slideshows of environmental changes over time</p>
-          </div>
-          {analysisConfig.bbox && (
-            <div className="bg-emerald-900/40 border border-emerald-500/30 rounded-lg p-3 text-xs max-w-sm">
-              <p className="font-semibold text-emerald-200">Active BBox Location</p>
-              <p className="font-mono text-emerald-100 mt-1">{analysisConfig.bbox}</p>
-            </div>
-          )}
-        </div>
-      </div>
+    <div className="min-h-screen bg-slate-50 pb-12">
+      <FeatureHero
+        icon={Film}
+        title="Time-Lapse Generator"
+        description="Generate frame-by-frame satellite animations of your selected region. Observe vegetation, land use, and environmental changes over custom time intervals."
+        imageUrl="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?q=80&w=2074&auto=format&fit=crop"
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        
+
         {/* Placeholder if no bounding box */}
         {!analysisConfig.bbox && (
           <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
             <Globe className="w-16 h-16 mx-auto text-slate-300 mb-4 animate-pulse" />
-            <h2 className="text-xl font-bold text-slate-800">Please select an analysis area.</h2>
+            <h2 className="gg-section-title">Please select an analysis area.</h2>
             <p className="text-slate-500 text-sm mt-2 max-w-md mx-auto">
               You must configure a bounding box and timeframe on the main GeoGuardian dashboard to view satellite time-lapses.
             </p>
@@ -180,7 +169,7 @@ const TimeLapse = () => {
           <>
             {/* Active Config Indicator */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Using Active Analysis Area</h3>
+              <h3 className="gg-label">Analysis Parameters</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm text-slate-700">
                 <div>
                   <span className="text-slate-400 block text-2xs uppercase">Location</span>
@@ -211,11 +200,11 @@ const TimeLapse = () => {
 
             {/* Input Config Form Section */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200 space-y-6">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
+              <h2 className="gg-card-title flex items-center gap-2">
                 <Sliders className="w-5 h-5 text-emerald-700" />
                 Configure Time-Lapse Details
               </h2>
-              
+
               {/* Interval Slider */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
@@ -295,14 +284,14 @@ const TimeLapse = () => {
               return (
                 <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200 space-y-6">
                   <div className="text-center space-y-1">
-                    <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 justify-center">
+                    <h2 className="gg-section-title flex items-center gap-2 justify-center">
                       <Film className="w-5 h-5 text-emerald-700" />
                       NDVI TIMELAPSE
                     </h2>
                     <p className="text-xs text-slate-500">
                       <strong>Active Location:</strong> {analysisConfig.locationName || "Location name unavailable"}
                     </p>
-                    <p className="text-2xs text-slate-400">
+                    <p className="gg-small-meta">
                       <strong>Period:</strong> {analysisConfig.startDate} → {analysisConfig.endDate}
                     </p>
                   </div>

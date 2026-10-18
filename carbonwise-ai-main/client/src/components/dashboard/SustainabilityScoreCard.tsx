@@ -6,7 +6,7 @@ interface SustainabilityScoreCardProps {
 }
 
 export const SustainabilityScoreCard = memo(function SustainabilityScoreCard({ score }: SustainabilityScoreCardProps) {
-  const { category, color, description } = getScoreCategory(score);
+  const { category, description } = getScoreCategory(score);
   const explanation = getScoreExplanation(score);
 
   const badgeVariantColors =
@@ -101,11 +101,11 @@ export const SustainabilityScoreCard = memo(function SustainabilityScoreCard({ s
           <div className={`inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide mb-3 ${badgeVariantColors}`}>
             {category}
           </div>
-          
+
           <div className="flex items-center gap-2 mb-4">
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: strokeColor }}></div>
             <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-               <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${score}%`, backgroundColor: strokeColor }}></div>
+              <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${score}%`, backgroundColor: strokeColor }}></div>
             </div>
           </div>
 

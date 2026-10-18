@@ -55,9 +55,9 @@ export const fetchSatelliteImage = async (date, bbox, width = 400, height = 400)
     const fromDate = new Date(dateObj.getTime() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
     const toDate = new Date(dateObj.getTime() + days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
     return {
-    input: { bounds: { bbox: [minLon, minLat, maxLon, maxLat], properties: { crs: "http://www.opengis.net/def/crs/EPSG/0/4326" } }, data: [{ type: "sentinel-2-l2a", dataFilter: { timeRange: { from: `${fromDate}T00:00:00Z`, to: `${toDate}T23:59:59Z` }, maxCloudCoverage, mosaickingOrder: "leastCC" } }] },
-    output: { width: Number(width), height: Number(height), responses: [{ identifier: "default", format: { type: "image/jpeg" } }] },
-    evalscript: "//VERSION=3\nfunction setup() { return { input: [\"B04\", \"B03\", \"B02\", \"dataMask\"], output: { bands: 3 } }; }\nfunction evaluatePixel(sample) { return [2.5 * sample.B04, 2.5 * sample.B03, 2.5 * sample.B02]; }",
+      input: { bounds: { bbox: [minLon, minLat, maxLon, maxLat], properties: { crs: "http://www.opengis.net/def/crs/EPSG/0/4326" } }, data: [{ type: "sentinel-2-l2a", dataFilter: { timeRange: { from: `${fromDate}T00:00:00Z`, to: `${toDate}T23:59:59Z` }, maxCloudCoverage, mosaickingOrder: "leastCC" } }] },
+      output: { width: Number(width), height: Number(height), responses: [{ identifier: "default", format: { type: "image/jpeg" } }] },
+      evalscript: "//VERSION=3\nfunction setup() { return { input: [\"B04\", \"B03\", \"B02\", \"dataMask\"], output: { bands: 3 } }; }\nfunction evaluatePixel(sample) { return [2.5 * sample.B04, 2.5 * sample.B03, 2.5 * sample.B02]; }",
     };
   };
   const isVisibleImage = async image => (await sharp(image).stats()).channels.slice(0, 3).some(channel => channel.max > 5);

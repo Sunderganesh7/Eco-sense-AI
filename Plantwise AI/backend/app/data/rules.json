@@ -1,0 +1,518 @@
+{
+  "rules": [
+    {
+      "land_type": "private_residential",
+      "display_name": "Private Residential / Society Land",
+      "governing_law": "Maharashtra (Urban Areas) Protection and Preservation of Trees Act, 1975 & Local Municipal By-laws",
+      "primary_authority": "Municipal Corporation Tree Authority / Local Nagar Parishad",
+      "secondary_authorities": ["Resident Welfare Association (RWA) / Society Managing Committee"],
+      "general_feasibility": "High",
+      "base_compliance_score": 92,
+      "noc_required": false,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Plantation on private property does not require prior felling permission, but planting along property perimeter must respect neighbor boundary lines and underground utility conduits.",
+        "Any future pruning or felling will be governed under Section 8 of the Tree Act, 1975 requiring formal Tree Officer permission.",
+        "Minimum 2-meter setback recommended from compound walls and sewer lines for deep-rooted species."
+      ],
+      "prohibited_species": ["Conocarpus erectus (Allergenic pollen)", "Eucalyptus tereticornis (High water table depletion near foundations)", "Prosopis juliflora (Invasive)"],
+      "recommended_canopy": "Medium to Compact shade trees",
+      "documents": [
+        {
+          "name": "Proof of Land Ownership (7/12 Extract, Property Card or Index-II / Society Allotment)",
+          "tag": "Required",
+          "description": "Demonstrates lawful ownership or tenancy rights to initiate plantation on the parcel."
+        },
+        {
+          "name": "Society / Co-owner No Objection Certificate (NOC)",
+          "tag": "Conditional",
+          "description": "Required if the parcel is within a cooperative housing society or shared joint-ownership premises."
+        },
+        {
+          "name": "Site Layout Sketch & Utility Clearance Plan",
+          "tag": "Required",
+          "description": "Indicating planting spots clear of water mains, septic tanks, and overhead electric service wires."
+        },
+        {
+          "name": "Selected Species List & Source Nursery Bill",
+          "tag": "Verify with authority",
+          "description": "Optional but required if applying for municipal sapling subsidy or green property tax rebate."
+        }
+      ]
+    },
+    {
+      "land_type": "private_commercial",
+      "display_name": "Private Commercial / IT Park / Industrial Campus",
+      "governing_law": "Maharashtra Municipal Corporations Act & MPCB Green Belt Guidelines",
+      "primary_authority": "Municipal Corporation Tree Authority / MIDC Environment Cell",
+      "secondary_authorities": ["Maharashtra Pollution Control Board (MPCB)", "Local Fire Department"],
+      "general_feasibility": "High",
+      "base_compliance_score": 88,
+      "noc_required": false,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Commercial establishments with built-up area > 20,000 sq.m must comply with 15% green cover landscaping under MoEFCC Environmental Clearance.",
+        "Fire tender access paths (minimum 6m wide clear width) must remain unobstructed by tree canopies under 4.5m clearance.",
+        "Perimeter avenue plantation must maintain standard 3m interval spacing."
+      ],
+      "prohibited_species": ["Conocarpus erectus", "Casuarina (near electric transformers)", "Leucaena leucocephala (Subabul)"],
+      "recommended_canopy": "Broad canopy native shade trees + Air pollution tolerant species",
+      "documents": [
+        {
+          "name": "Commercial Land Ownership / Lease Agreement",
+          "tag": "Required",
+          "description": "Valid title deed or leaseholder agreement from MIDC or Municipal Authority."
+        },
+        {
+          "name": "Sanctioned Landscape Masterplan & Fire Buffer Clearance",
+          "tag": "Required",
+          "description": "Shows tree planting zones outside active emergency circulation and loading zones."
+        },
+        {
+          "name": "Environmental Clearance / MPCB Consent to Operate (if applicable)",
+          "tag": "Conditional",
+          "description": "Required if fulfilling mandatory industrial/commercial green-cover quota conditions."
+        },
+        {
+          "name": "3-Year Maintenance & Drip Irrigation Plan",
+          "tag": "Required",
+          "description": "Ensures post-planting survival using recycled STP treated water."
+        }
+      ]
+    },
+    {
+      "land_type": "municipal_public",
+      "display_name": "Municipal Public Land (Parks, Footpaths, Open Spaces)",
+      "governing_law": "Maharashtra (Urban Areas) Protection and Preservation of Trees Act, 1975 & Municipal Public Parks Bye-laws",
+      "primary_authority": "Municipal Corporation Garden Department / Superintendent of Gardens & Tree Officer",
+      "secondary_authorities": ["Municipal Ward Officer", "City Traffic Police (for roadside planting)"],
+      "general_feasibility": "Medium",
+      "base_compliance_score": 74,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Prior written approval and MoU/Permission Letter from the Municipal Tree Officer is mandatory before planting any tree on municipal land.",
+        "Citizens/NGOs undertaking public plantation must execute a maintenance undertaking for at least 3 years.",
+        "Plantation along pedestrian pathways must ensure at least 1.8m unobstructed pedestrian walkway.",
+        "Tree grates or circular soil beds of minimum 1m x 1m must be kept unpaved around the trunk base."
+      ],
+      "prohibited_species": ["Conocarpus erectus", "Peltophorum pterocarpum (Brittle branches in monsoons)", "Prosopis juliflora"],
+      "recommended_canopy": "Deep-rooted native flowering and evergreen avenue trees",
+      "documents": [
+        {
+          "name": "Formal Plantation Proposal & Municipal Permission Application",
+          "tag": "Required",
+          "description": "Addressed to the Superintendent of Gardens with proposed coordinates and tree counts."
+        },
+        {
+          "name": "Organization / NGO Registration Certificate & PAN",
+          "tag": "Conditional",
+          "description": "Required if applying under NGO, CSR, or institutional partnership quota."
+        },
+        {
+          "name": "Detailed Geo-tagged Site Plan with Coordinates",
+          "tag": "Required",
+          "description": "Shows exact planting pits and distance from road curb and streetlights."
+        },
+        {
+          "name": "3-Year Maintenance & Survival Guarantee Undertaking (₹100 Stamp Paper)",
+          "tag": "Required",
+          "description": "Statutory undertaking committing watering, tree guards, and replacement of dead saplings."
+        },
+        {
+          "name": "Ward Engineer NOC (Underground Utility Conduits)",
+          "tag": "Verify with authority",
+          "description": "Verifies that roots will not damage drainage lines, power cables, or gas pipelines."
+        }
+      ]
+    },
+    {
+      "land_type": "forest_reserved",
+      "display_name": "State Reserved / Protected Forest Land",
+      "governing_law": "Indian Forest Act, 1927 & Van (Sanrakshan Evam Samvardhan) Adhiniyam, 1980 / 2023",
+      "primary_authority": "Maharashtra Forest Department (Deputy Conservator of Forests - DFO / Range Forest Officer - RFO)",
+      "secondary_authorities": ["Joint Forest Management Committee (JFMC)", "Principal Chief Conservator of Forests (PCCF)"],
+      "general_feasibility": "Restricted / Conditional",
+      "base_compliance_score": 38,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Strict statutory restriction: Unauthorized entry, digging, or plantation inside Reserved/Protected Forest is an offense under Section 26/33 of Indian Forest Act 1927.",
+        "All plantation activities must be executed exclusively through or in direct joint partnership with the Territorial Forest Department under approved Working Plans or Joint Forest Management (JFM) schemes.",
+        "Strictly 100% indigenous local forest species from local forest department nurseries only. Zero exotic or hybrid species allowed."
+      ],
+      "prohibited_species": ["All Exotic/Introduced Species", "Eucalyptus", "Acacia auriculiformis", "Conocarpus", "Leucaena"],
+      "recommended_canopy": "Indigenous endemic forest climax species (Teak, Mahua, Ain, Dhavda, Banyan, Peepal)",
+      "documents": [
+        {
+          "name": "Formal Application to Deputy Conservator of Forests (DFO)",
+          "tag": "Required",
+          "description": "Submission of project scope and intent under JFM or Compensatory Afforestation framework."
+        },
+        {
+          "name": "Forest Compartment Map & GPS Perimeter Demarcation",
+          "tag": "Required",
+          "description": "Survey of India / Forest Department Compartment number reference."
+        },
+        {
+          "name": "Joint Forest Management (JFM) Resolution / MoU with Local Gram Sabha",
+          "tag": "Required",
+          "description": "Mandatory community consent if working in fringe forest buffer villages."
+        },
+        {
+          "name": "Endemic Forest Species Authenticity Certificate",
+          "tag": "Required",
+          "description": "Certified provenance of saplings from Forest Department registered research nurseries."
+        },
+        {
+          "name": "Stage-I Forest Clearance (if commercial/infrastructure linked)",
+          "tag": "Conditional",
+          "description": "Required if plantation is part of statutory Compensatory Afforestation (CAMPA)."
+        }
+      ]
+    },
+    {
+      "land_type": "agricultural",
+      "display_name": "Agricultural / Rural Farmland (Agroforestry)",
+      "governing_law": "Maharashtra Land Revenue Code, 1966 & National Agroforestry Policy",
+      "primary_authority": "Department of Agriculture, Govt. of Maharashtra / Local Talathi & Gram Panchayat",
+      "secondary_authorities": ["Social Forestry Division / Krishi Vigyan Kendra (KVK)"],
+      "general_feasibility": "High",
+      "base_compliance_score": 90,
+      "noc_required": false,
+      "intimation_required": false,
+      "statutory_conditions": [
+        "Farmers have full statutory rights to plant trees on their private farmland without prior permission.",
+        "Planting along the boundary (Bund planting) must maintain 1.5m clearance from adjoining survey boundaries to prevent root/shade encroachment.",
+        "Felling of specific scheduled timber species (Teak, Sandalwood, Rosewood) after maturity requires transit permit under Maharashtra Felling of Trees (Regulation) Act, 1964.",
+        "Eligible for direct government subsidies under Sub-Mission on Agroforestry (SMAF) and Mahatma Gandhi NREGS."
+      ],
+      "prohibited_species": ["Prosopis juliflora", "Eucalyptus (near dryland water-sensitive crops)"],
+      "recommended_canopy": "Agro-forestry multi-purpose timber and fruit trees (Bamboo, Shevga/Moringa, Teak, Neem, Subabul bunds, Jamun)",
+      "documents": [
+        {
+          "name": "7/12 Extract (Saat-Baara) & 8-A Land Record",
+          "tag": "Required",
+          "description": "Recent revenue record demonstrating ownership and crop survey details."
+        },
+        {
+          "name": "Aadhaar Card & Bank Account Linked to DBT",
+          "tag": "Conditional",
+          "description": "Required for receiving Direct Benefit Transfer subsidies under Agroforestry schemes."
+        },
+        {
+          "name": "Farmland Boundary Map (Gat Nakasha)",
+          "tag": "Required",
+          "description": "Cadastral map showing bund lines and boundary clearances."
+        },
+        {
+          "name": "Gram Panchayat No-Objection / Intimation (if community bund)",
+          "tag": "Conditional",
+          "description": "Only required if planting on village common boundaries or water channels."
+        }
+      ]
+    },
+    {
+      "land_type": "roadside_nhai",
+      "display_name": "National Highway Verge / Right-of-Way (NHAI)",
+      "governing_law": "National Highways Act, 1956 & NHAI Green Highways (Plantation, Transplantation, Beautification & Maintenance) Policy, 2015",
+      "primary_authority": "National Highways Authority of India (NHAI) - Project Director / Regional Officer",
+      "secondary_authorities": ["Ministry of Road Transport and Highways (MoRTH)", "State Forest Dept (if notified protected forest strip)"],
+      "general_feasibility": "Medium / Strict Guidelines",
+      "base_compliance_score": 62,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "No planting within 3.5 meters of the paved roadway edge (Clear Zone for vehicular errant run-off safety).",
+        "Median plantation height restricted to maximum 1.5m to eliminate headlight glare without obstructing intersection sight triangles.",
+        "Tough, drought-tolerant species with deep non-lateral tap roots required to prevent pavement uplift.",
+        "Formal concession agreement or NHAI Green Corridor registration required for CSR/NGO implementations."
+      ],
+      "prohibited_species": ["Ficus benghalensis (Massive aerial root road damage)", "Ficus religiosa (Near bridge abutments)", "Fruit trees attracting animals to high-speed lanes"],
+      "recommended_canopy": "Avenue trees: Neem, Tamarind, Karanj, Cassia fistula, Gulmohar, Bougainvillea on medians",
+      "documents": [
+        {
+          "name": "NHAI Project Director Formal Permission / Concession Agreement",
+          "tag": "Required",
+          "description": "Official permit granting access to the highway right-of-way chainage."
+        },
+        {
+          "name": "Chainage-wise Landscape & Safety Alignment Plan",
+          "tag": "Required",
+          "description": "Detailed plan indicating kilometer markers, setback distances, and median heights."
+        },
+        {
+          "name": "Traffic Management & Worker Safety Plan (IRC Guidelines)",
+          "tag": "Required",
+          "description": "Commitment for safety cones, high-visibility jackets, and water tanker escort protocols."
+        },
+        {
+          "name": "5-Year Performance & 80% Survival Guarantee Bond",
+          "tag": "Required",
+          "description": "Standard NHAI requirement for institutional highway plantation partners."
+        }
+      ]
+    },
+    {
+      "land_type": "roadside_pwd",
+      "display_name": "State Highway / PWD Roadside Verge",
+      "governing_law": "Maharashtra State Highways Act & PWD Roadside Arboriculture Manual",
+      "primary_authority": "Public Works Department (PWD) - Executive Engineer / Assistant Engineer",
+      "secondary_authorities": ["Social Forestry Directorate, Maharashtra", "District Collectorate"],
+      "general_feasibility": "Medium",
+      "base_compliance_score": 68,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Plantation line must maintain minimum 2.5m distance from the blacktopped carriage edge.",
+        "Sightline distance at horizontal curves and road junctions must remain completely free of thick shrubbery.",
+        "Must coordinate with Social Forestry Department for roadside sapling allocation under PWD quota."
+      ],
+      "prohibited_species": ["Conocarpus erectus", "Prosopis juliflora", "Trees with weak brittle branches"],
+      "recommended_canopy": "Sturdy native shade avenue trees (Karanj, Mahua, Shisham, Bael, Bakul)",
+      "documents": [
+        {
+          "name": "PWD Executive Engineer Road Access & Arboriculture Permission",
+          "tag": "Required",
+          "description": "Written approval referencing highway chainage and road division."
+        },
+        {
+          "name": "Site Sketch indicating Road Margin & Utility Lines",
+          "tag": "Required",
+          "description": "Verifies safe distance from optical fiber cables and drainage ditches."
+        },
+        {
+          "name": "Letter of Support from Local Social Forestry Division",
+          "tag": "Conditional",
+          "description": "Required if claiming subsidized tree guards and saplings."
+        }
+      ]
+    },
+    {
+      "land_type": "railway",
+      "display_name": "Railway Land & Track Vicinity",
+      "governing_law": "Railways Act, 1989 & Indian Railways Engineering Code for Track Safety",
+      "primary_authority": "Indian Railways (Divisional Railway Manager - DRM / Senior Divisional Engineer - Sr. DEN)",
+      "secondary_authorities": ["Railway Protection Force (RPF)"],
+      "general_feasibility": "Strictly Controlled",
+      "base_compliance_score": 42,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Strict track safety mandate: Zero planting permitted within 15 meters from the center line of the outermost railway track.",
+        "Trees under or near 25 kV Overhead Electric (OHE) traction lines are strictly prohibited if mature height exceeds 4 meters.",
+        "Signal visibility corridors must have 100% unobstructed sightlines for loco pilots.",
+        "All plantation on railway land must be backed by a formal MoU with the Railway Division under the IR Green Afforestation Policy."
+      ],
+      "prohibited_species": ["Tall trees > 5m height near tracks", "Trees prone to branch snapping (Gulmohar, Peltophorum)", "Eucalyptus"],
+      "recommended_canopy": "Dwarf flowering shrubs, low hedges, and low-growing ground cover outside safety envelope",
+      "documents": [
+        {
+          "name": "Senior Divisional Engineer (Sr. DEN) Land Access Sanction",
+          "tag": "Required",
+          "description": "Mandatory railway division approval signed by the competent railway authority."
+        },
+        {
+          "name": "Railway Safety Clearance & OHE Distance Certification",
+          "tag": "Required",
+          "description": "Signed by Permanent Way Inspector (PWI) and Electrical Traction Inspector."
+        },
+        {
+          "name": "Joint Track Boundary Inspection Report",
+          "tag": "Required",
+          "description": "Confirms tree pits are beyond the statutory 15m safety setback."
+        },
+        {
+          "name": "Institutional MoU / CSR Partnership Agreement with Railways",
+          "tag": "Conditional",
+          "description": "Required for non-governmental or corporate plantation drives."
+        }
+      ]
+    },
+    {
+      "land_type": "coastal_crz",
+      "display_name": "Coastal Regulation Zone (CRZ-I / II / III)",
+      "governing_law": "Coastal Regulation Zone (CRZ) Notification, 2019 under Environment (Protection) Act, 1986",
+      "primary_authority": "Maharashtra Coastal Zone Management Authority (MCZMA) / District Coastal Management Committee",
+      "secondary_authorities": ["Mangrove Cell, Maharashtra Forest Department", "Local Municipal Corporation / Town Planning"],
+      "general_feasibility": "Specialized Ecological Category",
+      "base_compliance_score": 58,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "In CRZ-I (Ecologically Sensitive - Mangroves/Mudflats/Sand dunes), only conservation and restoration of native mangrove and saline flora is permissible.",
+        "Zero earth excavation, reclamation, dumping of construction debris, or hard concrete tree guards permitted in No Development Zones (NDZ).",
+        "Mangrove buffer zone of 50 meters from high tide line is strictly protected under Bombay High Court Mangrove Order."
+      ],
+      "prohibited_species": ["Non-saline terrestrial invasive species", "Conocarpus erectus", "Eucalyptus", "Lantana camara"],
+      "recommended_canopy": "Mangrove & Coastal species (Rhizophora mucronata, Avicennia marina, Sonneratia alba, Casuarina equisetifolia, Thespesia populnea, Coconut)",
+      "documents": [
+        {
+          "name": "CRZ Mapping & Distance from High Tide Line (HTL) Certificate",
+          "tag": "Required",
+          "description": "Authorized CZMP (Coastal Zone Management Plan) demarcation map."
+        },
+        {
+          "name": "Maharashtra Coastal Zone Management Authority (MCZMA) NOC / Clearance",
+          "tag": "Conditional",
+          "description": "Required if plantation area falls in CRZ-I or involves community eco-restoration."
+        },
+        {
+          "name": "State Mangrove Cell Recommendation Letter",
+          "tag": "Conditional",
+          "description": "Mandatory if plantation is within 50m mangrove buffer or tidal creek boundaries."
+        },
+        {
+          "name": "Local District Coastal Management Committee Permission",
+          "tag": "Required",
+          "description": "Chaired by the District Collector."
+        }
+      ]
+    },
+    {
+      "land_type": "protected_area_esz",
+      "display_name": "Eco-Sensitive Zone (ESZ) / Wildlife Sanctuary Fringe",
+      "governing_law": "Wildlife (Protection) Act, 1972 & MoEFCC Eco-Sensitive Zone Notification",
+      "primary_authority": "Chief Wildlife Warden, Maharashtra / National Board for Wildlife (NBWL)",
+      "secondary_authorities": ["Field Director / Sanctuary Conservator", "State Bio-diversity Board"],
+      "general_feasibility": "Strict Regulatory Oversight",
+      "base_compliance_score": 48,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Eco-Sensitive Zone surrounding National Parks (e.g., Sanjay Gandhi National Park, Tadoba, Radhanagari) requires statutory wildlife screening.",
+        "Zero introduction of exotic, invasive, or non-native flora allowed. Only species matching the localized micro-habitat ecosystem are permitted.",
+        "Must not construct any permanent fencing or physical barriers that hinder natural wildlife movement corridors."
+      ],
+      "prohibited_species": ["All Non-endemic / Exotic species", "Acacia mearnsii", "Lantana", "Parthenium", "Subabul"],
+      "recommended_canopy": "Endemic Western Ghats / Deccan forest flora (Ain, Hirda, Behda, Kadamba, Wild Ficus, Bamboo)",
+      "documents": [
+        {
+          "name": "Sanctuary Conservator / Wildlife Warden Clearance Certificate",
+          "tag": "Required",
+          "description": "Confirms plantation aligns with Sanctuary ESZ Management Plan."
+        },
+        {
+          "name": "Native Biodiversity & Micro-habitat Suitability Assessment",
+          "tag": "Required",
+          "description": "Prepared by a certified botanist/ecologist ensuring zero invasive flora."
+        },
+        {
+          "name": "Eco-Sensitive Zone Monitoring Committee Approval",
+          "tag": "Required",
+          "description": "Chaired by District Magistrate and DFO (Wildlife)."
+        }
+      ]
+    },
+    {
+      "land_type": "campus_institutional",
+      "display_name": "Educational / University / Hospital Campus",
+      "governing_law": "State University / Education Dept Norms & Municipal Tree Authority Guidelines",
+      "primary_authority": "Campus Management / Registrar / Head of Institution",
+      "secondary_authorities": ["Municipal Tree Authority", "Local Forest Range Office (for sapling distribution)"],
+      "general_feasibility": "High",
+      "base_compliance_score": 94,
+      "noc_required": false,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Excellent suitability: Institutional campuses offer enclosed security, student volunteer power, and dedicated water infrastructure.",
+        "Planting locations must preserve sports grounds, expansion masterplans, and solar rooftop sun exposure.",
+        "Miyawaki dense forest models are highly successful on campus parcels > 500 sq.m."
+      ],
+      "prohibited_species": ["Conocarpus erectus (Allergenic for students)", "Thorny invasive shrubs"],
+      "recommended_canopy": "Medicinal, shade, and educational botanic gardens (Neem, Peepal, Ashoka, Bael, Amla, Kadamba, Gulmohar)",
+      "documents": [
+        {
+          "name": "Institution Head / Principal / Registrar Permission Letter",
+          "tag": "Required",
+          "description": "Confirms campus authorization and designated plot allocation."
+        },
+        {
+          "name": "Campus Master Plan showing Proposed Green Zone",
+          "tag": "Required",
+          "description": "Ensures no conflict with future academic block constructions."
+        },
+        {
+          "name": "Student Eco-Club / NSS Volunteer Caretaker Charter",
+          "tag": "Verify with authority",
+          "description": "Documents sustainable post-planting watering and weeding teams."
+        }
+      ]
+    },
+    {
+      "land_type": "industrial_greenbelt",
+      "display_name": "Industrial Estate / MIDC Green Belt Zone",
+      "governing_law": "Air (Prevention and Control of Pollution) Act, 1981 & MIDC Land Regulations",
+      "primary_authority": "Maharashtra Industrial Development Corporation (MIDC) Environment Cell",
+      "secondary_authorities": ["Maharashtra Pollution Control Board (MPCB)"],
+      "general_feasibility": "High / Mandatory Quota",
+      "base_compliance_score": 86,
+      "noc_required": false,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Industries are statutorily required to develop a 33% green belt within their industrial plot as part of Consent to Establish/Operate.",
+        "Trees must be planted in 2 to 3 staggered rows along the boundary perimeter to act as a dust and acoustic buffer.",
+        "Species must have high Air Pollution Tolerance Index (APTI) and superior particulate capture capability."
+      ],
+      "prohibited_species": ["Species sensitive to sulfur dioxide and particulate accumulation"],
+      "recommended_canopy": "High APTI species: Neem, Peepal, Banyan, Karanj, Shisham, Terminalia arjuna, Alstonia scholaris",
+      "documents": [
+        {
+          "name": "MIDC Allotment Letter & Lease Agreement",
+          "tag": "Required",
+          "description": "Proof of industrial plot boundaries and category."
+        },
+        {
+          "name": "MPCB Consent to Establish / Operate (Copy)",
+          "tag": "Required",
+          "description": "Specifies mandatory green belt percentage condition."
+        },
+        {
+          "name": "Green Belt Layout Map with 3-Row Staggered Buffer Specification",
+          "tag": "Required",
+          "description": "Delineates perimeter green buffer and total canopy coverage."
+        },
+        {
+          "name": "Treated Effluent / STP Water Irrigation Layout",
+          "tag": "Conditional",
+          "description": "Mandatory to show zero discharge recycling for green belt maintenance."
+        }
+      ]
+    },
+    {
+      "land_type": "waterbody_vicinity",
+      "display_name": "Riverbank / Lake Perimeter / Canal Buffer (Riparian Zone)",
+      "governing_law": "Maharashtra Irrigation Act, 1976 & River Regulation Zone (RRZ) Norms",
+      "primary_authority": "Water Resources Department (Irrigation Dept) / Local River Basin Authority",
+      "secondary_authorities": ["District Collectorate (Flood Line Wing)", "Local Municipal / Village Panchayat"],
+      "general_feasibility": "High Ecological Priority",
+      "base_compliance_score": 80,
+      "noc_required": true,
+      "intimation_required": true,
+      "statutory_conditions": [
+        "Plantation within Blue Line (Prohibitive Flood Zone) and Red Line (Restrictive Flood Zone) requires Irrigation Dept clearance.",
+        "Soil-binding riparian species with fibrous root networks are mandated to prevent bank erosion and siltation.",
+        "Zero concrete or stone revetment damage permitted during pit excavation."
+      ],
+      "prohibited_species": ["Eucalyptus (Excessive groundwater draft near catchment)", "Water Hyacinth", "Prosopis"],
+      "recommended_canopy": "Riparian bank stabilizers: Bamboo (Dendrocalamus), Arjun (Terminalia arjuna), Jamun, Indian Willow, Karanj",
+      "documents": [
+        {
+          "name": "Water Resources / Irrigation Department Permission NOC",
+          "tag": "Required",
+          "description": "Clearance confirming tree roots will stabilize bank without blocking flood discharge."
+        },
+        {
+          "name": "Irrigation Section Engineer Joint Inspection Memo",
+          "tag": "Required",
+          "description": "Confirms distance from highest flood line (HFL) and canal embankments."
+        },
+        {
+          "name": "Gram Panchayat / Municipal Catchment Protection Resolution",
+          "tag": "Conditional",
+          "description": "Required for community lake rejuvenation and riverfront greening drives."
+        }
+      ]
+    }
+  ]
+}

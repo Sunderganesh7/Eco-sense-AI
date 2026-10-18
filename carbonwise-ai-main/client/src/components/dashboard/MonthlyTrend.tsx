@@ -38,7 +38,7 @@ export const MonthlyTrend = memo(function MonthlyTrend({ data }: MonthlyTrendPro
 
   // Use the latest month's data to show the 4 category bars
   const latestMonth = data[data.length - 1];
-  
+
   const chartData = [
     { name: 'Transportation', value: Math.round(latestMonth.transportation * 10) / 10 },
     { name: 'Energy', value: Math.round(latestMonth.energy * 10) / 10 },
@@ -63,7 +63,7 @@ export const MonthlyTrend = memo(function MonthlyTrend({ data }: MonthlyTrendPro
             </p>
           </div>
         </div>
-        
+
         {/* Dropdown styling */}
         <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-slate-600 shadow-sm cursor-pointer hover:bg-slate-50">
           This Month
