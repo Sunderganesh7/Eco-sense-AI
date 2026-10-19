@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { healthCheck } from '../services/api'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import AzureTranslate from '../components/AzureTranslate'
 export default function Login() {
@@ -11,6 +12,58 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '', name: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [backendStatus, setBackendStatus] = useState({
+    checking: true,
+    connected: false,
+    status: null,
+    version: null,
+    message: 'Checking backend status...',
+  })
+
+  useEffect(() => {
+    let active = true
+    healthCheck()
+      .then(res => {
+        if (!active) return
+        if (res && (res.status === 'healthy' || res.status === 'degraded' || res.services?.api === 'running')) {
+          setBackendStatus({
+            checking: false,
+            connected: true,
+            status: res.status,
+            database: res.database_connected,
+            version: res.version,
+            message: res.status === 'healthy' ? 'Backend Connected' : 'Backend Connected (ML Active)',
+          })
+        } else {
+          setBackendStatus({
+            checking: false,
+            connected: false,
+            status: 'offline',
+            message: 'Backend Unreachable',
+          })
+        }
+      })
+      .catch(() => {
+        if (!active) return
+        setBackendStatus({
+          checking: false,
+          connected: false,
+          status: 'offline',
+          message: 'Cannot connect to backend service',
+        })
+      })
+    return () => { active = false }
+  }, [])
+
+  const handleQuickDemo = (e) => {
+    e.preventDefault()
+    setForm(prev => ({
+      ...prev,
+      email: 'admin@capportal.gov.in',
+      password: 'admin123',
+    }))
+    if (error) setError('')
+  }
 
   useEffect(() => {
     if (isAuthenticated) navigate('/', { replace: true })
@@ -134,6 +187,32 @@ export default function Login() {
             </p>
           </div>
 
+          {/* Real Backend Connection Status Indicator */}
+          <div
+            id="backend-connection-status"
+            className="mb-5 flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-surface-container-highest/60 border border-outline-variant/20 text-xs transition-all"
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                  backendStatus.checking
+                    ? 'bg-amber-400 animate-pulse'
+                    : backendStatus.connected
+                    ? 'bg-emerald-500'
+                    : 'bg-rose-500'
+                }`}
+              />
+              <span className="font-semibold text-on-surface">
+                {backendStatus.checking ? 'Checking backend connection...' : backendStatus.message}
+              </span>
+            </div>
+            {backendStatus.connected && (
+              <span className="text-[11px] text-on-surface-variant/60 font-mono">
+                {backendStatus.version ? `v${backendStatus.version}` : 'v3.0.0'}
+              </span>
+            )}
+          </div>
+
           {error && (
             <div className="bg-error-container/30 text-on-error-container p-3.5 rounded-2xl text-sm mb-5 flex items-center gap-2.5 animate-fade-in">
               <span className="material-symbols-outlined text-error text-lg">error</span>
@@ -217,26 +296,16 @@ export default function Login() {
               )}
             </button>
 
-            {/* Quick Demo Login */}
+            {/* Quick Demo Autofill */}
             {!isRegister && (
               <button
                 id="quick-demo-btn"
                 type="button"
-                onClick={async () => {
-                  setError('')
-                  setLoading(true)
-                  try {
-                    await login('admin@capportal.gov.in', 'admin123')
-                    navigate('/')
-                  } catch (err) {
-                    setError(err.message || 'Demo login failed')
-                  } finally {
-                    setLoading(false)
-                  }
-                }}
-                className="w-full py-3 rounded-2xl bg-[#E7F0E8] hover:bg-[#D8E6DA] text-[#042F25] font-bold text-xs flex items-center justify-center gap-2 transition-colors border border-[#CDE0D1]"
+                onClick={handleQuickDemo}
+                className="w-full py-3 rounded-2xl bg-[#E7F0E8] hover:bg-[#D8E6DA] text-[#042F25] font-bold text-xs flex items-center justify-center gap-2 transition-colors border border-[#CDE0D1] cursor-pointer"
+                title="Autofill verified demo account credentials"
               >
-                <span>👑</span>
+                <span className="material-symbols-outlined text-sm text-[#087F5B]">bolt</span>
                 <span><AzureTranslate text="Quick Demo Access (Sunderganesh)" /></span>
               </button>
             )}

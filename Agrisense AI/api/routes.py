@@ -235,6 +235,12 @@ async def api_register(req: AuthRegisterRequest):
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        print(f"[AUTH ERROR] Registration error: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Database service is currently offline. User registration requires a database connection."
+        )
 
 
 @router.post("/auth/login")
@@ -245,6 +251,12 @@ async def api_login(req: AuthLoginRequest):
         return result
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
+    except Exception as e:
+        print(f"[AUTH ERROR] Login error: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Database service is currently offline. User login requires a database connection."
+        )
 
 
 @router.post("/auth/verify")

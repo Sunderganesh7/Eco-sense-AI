@@ -13,7 +13,8 @@ from dotenv import load_dotenv
 # Load environment variables from .env file (if present)
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
@@ -114,6 +115,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    origin = request.headers.get("origin")
+    headers = {}
+    if origin and (origin in ALLOWED_ORIGINS or ".vercel.app" in origin):
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal server error: {str(exc)}"},
+        headers=headers,
+    )
 
 # Register API routes
 app.include_router(router)
