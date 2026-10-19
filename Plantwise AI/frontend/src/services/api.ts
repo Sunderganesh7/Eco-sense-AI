@@ -10,7 +10,15 @@ import type {
   DocumentDraftResponse
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8002/api';
+// Resolve backend API URL from environment variables or fallback to deployed Render backend
+const rawBase = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  'https://eco-sense-ai-1-rv9n.onrender.com'
+).replace(/\/+$/, '');
+
+// Ensure API_BASE always ends with '/api' exactly once, preventing duplicate /api/api prefixes
+const API_BASE = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`;
 
 export const api = {
   // Locations
