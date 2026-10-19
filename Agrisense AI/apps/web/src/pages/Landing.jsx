@@ -14,6 +14,8 @@ import cardMarketImg from '../assets/card-market.jpg';
 import heroImg from '../assets/hero-landscape.jpg';
 import ctaImg from '../assets/cta-landscape.jpg';
 
+const MAIN_PORTAL_URL = import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-one.vercel.app';
+
 export default function Landing() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -160,11 +162,11 @@ export default function Landing() {
 
             {/* Back to Eco Sense AI Button */}
             <a
-              href="http://localhost:8000"
+              href={MAIN_PORTAL_URL}
               onClick={(e) => {
                 if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
                   e.preventDefault();
-                  window.location.href = "http://localhost:8000";
+                  window.location.href = MAIN_PORTAL_URL;
                 }
               }}
               id="landing-back-to-ecosense-btn"
@@ -244,11 +246,11 @@ export default function Landing() {
 
             <div className="pt-2">
               <a
-                href="http://localhost:8000"
+                href={MAIN_PORTAL_URL}
                 onClick={(e) => {
                   if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
                     e.preventDefault();
-                    window.location.href = "http://localhost:8000";
+                    window.location.href = MAIN_PORTAL_URL;
                   }
                 }}
                 className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-[#064E3B] hover:bg-[#047857] text-white font-bold text-sm shadow-sm transition-all cursor-pointer"

@@ -87,10 +87,29 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS -- allow frontend dev server
+# CORS -- allow production origins and dev environments
+ALLOWED_ORIGINS = [
+    "https://eco-sense-ai-web.vercel.app",
+    "https://eco-sense-ai-one.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "http://localhost:5176",
+    "http://localhost:8000",
+    "http://localhost:3000",
+]
+
+env_origins = os.getenv("ALLOWED_ORIGINS")
+if env_origins:
+    for o in env_origins.split(","):
+        clean_o = o.strip()
+        if clean_o and clean_o not in ALLOWED_ORIGINS:
+            ALLOWED_ORIGINS.append(clean_o)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

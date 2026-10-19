@@ -23,6 +23,8 @@ import WhatIfSimulator from './pages/WhatIfSimulator'
 import SmartAlerts from './pages/SmartAlerts'
 import ProfitPlanner from './pages/ProfitPlanner'
 import FieldScanner from './pages/FieldScanner'
+
+const MAIN_PORTAL_URL = import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-one.vercel.app';
 import Weather from './pages/Weather'
 import Schemes from './pages/Schemes'
 import Loans from './pages/Loans'
@@ -175,7 +177,7 @@ function Sidebar({ isOpen, onClose }) {
         <div className="p-3 border-t border-[#073D30] space-y-2.5 shrink-0 bg-[#042F25]">
           {/* Back to Eco Sense AI Button */}
           <a
-            href="http://localhost:8000"
+            href={MAIN_PORTAL_URL}
             id="back-to-ecosense-btn"
             className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-[#A8E6CF] hover:bg-[#8EE0BF] text-[#042F25] font-bold text-[13px] shadow-sm hover:shadow transition-all group cursor-pointer"
             title="Back to Eco Sense AI"

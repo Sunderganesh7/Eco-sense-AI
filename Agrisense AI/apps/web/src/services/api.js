@@ -2,14 +2,26 @@
  * API Service — Connects frontend to FastAPI backend
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8003/api';
+const rawBase = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  'https://eco-sense-ai-2.onrender.com'
+).replace(/\/+$/, '');
+
+// Ensure API_BASE includes /api exactly once
+const API_BASE = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`;
 
 function getAuthToken() {
   return localStorage.getItem('smartcrop_token');
 }
 
 async function apiCall(endpoint, options = {}) {
-  const url = `${API_BASE}${endpoint}`;
+  // Normalize endpoint: ensure leading slash, strip leading /api if present to avoid duplication
+  let cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (cleanEndpoint.startsWith('/api/')) {
+    cleanEndpoint = cleanEndpoint.substring(4);
+  }
+  const url = `${API_BASE}${cleanEndpoint}`;
   const token = getAuthToken();
 
   // Build headers
@@ -33,7 +45,7 @@ async function apiCall(endpoint, options = {}) {
     return await res.json();
   } catch (err) {
     if (err.name === 'TypeError' && err.message.includes('fetch')) {
-      throw new Error('Cannot connect to backend. Make sure the server is running on port 8003.');
+      throw new Error('Cannot connect to backend. Please make sure the AgriSense AI backend service is running.');
     }
     throw err;
   }
