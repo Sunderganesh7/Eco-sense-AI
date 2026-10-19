@@ -56,7 +56,7 @@
 
                 <nav class="sidebar-nav">
                     <!-- Dashboard Active Item -->
-                    <a href="#" class="nav-item-dashboard active">
+                    <a href="#overview" class="nav-item-dashboard active" id="nav-item-dashboard" title="Platform Overview">
                         <i class="fa-solid fa-house"></i>
                         <span>Dashboard</span>
                     </a>
@@ -80,10 +80,11 @@
                             </a>
                         </li>
                         <li>
-                            <a href="http://localhost:5173" class="nav-item-solution">
+                            <a href="#carbonwise" class="nav-item-solution" id="nav-item-carbonwise" title="CarbonWise AI Embedded Platform">
                                 <div class="solution-content">
                                     <i class="fa-solid fa-leaf icon-module"></i> <span>CarbonWise AI</span>
                                 </div>
+                                <span class="nav-badge-pill">Live</span>
                                 <i class="fa-solid fa-chevron-right chevron"></i>
                             </a>
                         </li>
@@ -118,7 +119,7 @@
 
         <!-- MAIN CONTENT AREA -->
         <div class="main-wrapper">
-            <main class="main-content">
+            <main class="main-content" id="dashboard-overview">
                 <!-- HERO SECTION -->
                 <section class="hero">
                     <div class="hero-bg"></div>
@@ -198,8 +199,7 @@
                         </div>
 
                         <!-- Card 1: CarbonWise AI -->
-                        <div class="feature-card card-carbonwise"
-                            onclick="window.location.href='http://localhost:5173'">
+                        <div class="feature-card card-carbonwise" id="card-carbonwise" role="button" tabindex="0" title="Launch CarbonWise AI">
                             <img src="assets/images/features/card_carbonwise.jpg" class="card-bg-image"
                                 alt="Carbon footprint background">
                             <div class="card-top">
@@ -328,8 +328,94 @@
                 </section>
 
             </main>
+
+            <!-- EMBEDDED CARBONWISE AI VIEW -->
+            <section class="embedded-view-container" id="carbonwise-container" style="display: none;" aria-label="CarbonWise AI Embedded Application">
+                <!-- Top Control & Navigation Header Bar -->
+                <header class="embedded-header">
+                    <div class="embedded-header-left">
+                        <button type="button" class="btn-back-overview" id="btn-back-overview" title="Return to Platform Overview">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Back to Platform Overview</span>
+                        </button>
+                        <div class="embedded-header-divider" aria-hidden="true"></div>
+                        <div class="embedded-title-group">
+                            <div class="embedded-icon-box">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h1 class="embedded-module-title">CarbonWise AI</h1>
+                                <p class="embedded-module-tagline">Track. Understand. Act.</p>
+                            </div>
+                            <span class="embedded-status-pill">
+                                <span class="status-pulse-dot"></span>
+                                Embedded Live View
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="embedded-header-right">
+                        <button type="button" class="embedded-action-btn" id="btn-reload-iframe" title="Reload Frame" aria-label="Reload Frame">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>Reload</span>
+                        </button>
+                        <button type="button" class="embedded-action-btn" id="btn-fullscreen-iframe" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+                            <i class="fa-solid fa-expand"></i>
+                            <span>Fullscreen</span>
+                        </button>
+                        <a href="https://eco-sense-ai-bvxx.vercel.app" target="_blank" rel="noopener noreferrer" class="embedded-action-btn embedded-btn-external" title="Open CarbonWise AI in a new tab">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            <span>Open in New Tab</span>
+                        </a>
+                    </div>
+                </header>
+
+                <!-- Iframe Display Area -->
+                <div class="embedded-frame-wrapper" id="embedded-frame-wrapper">
+                    <!-- Loading state indicator -->
+                    <div class="frame-loading-overlay" id="frame-loading-overlay">
+                        <div class="frame-loader-spinner"></div>
+                        <p class="frame-loading-text">Connecting to CarbonWise AI...</p>
+                        <span class="frame-loading-subtext">Loading AI-powered footprint analytics platform</span>
+                    </div>
+
+                    <!-- Security / Header Fallback Banner -->
+                    <div class="frame-fallback-banner" id="frame-fallback-banner" style="display: none;">
+                        <div class="fallback-card">
+                            <div class="fallback-icon">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <h3>Iframe Display Restricted</h3>
+                            <p>Your browser or current security settings prevented embedding the external module. To continue seamlessly, open the application directly:</p>
+                            <div class="fallback-actions">
+                                <a href="https://eco-sense-ai-bvxx.vercel.app" class="btn-fallback-primary" id="fallback-same-tab">
+                                    <i class="fa-solid fa-arrow-right"></i> Continue to CarbonWise AI (Same Tab)
+                                </a>
+                                <a href="https://eco-sense-ai-bvxx.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-fallback-secondary">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in New Tab
+                                </a>
+                                <button type="button" class="btn-fallback-text" onclick="window.location.hash = ''">
+                                    Return to Overview
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Responsive Iframe -->
+                    <iframe
+                        id="carbonwise-iframe"
+                        class="embedded-iframe"
+                        title="CarbonWise AI Platform"
+                        allow="clipboard-write; microphone; camera; geolocation"
+                        loading="lazy"
+                        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads">
+                    </iframe>
+                </div>
+            </section>
         </div>
     </div>
+    <!-- Environment Config and Application Controller -->
+    <script type="module" src="app.js"></script>
 </body>
 
 </html>
