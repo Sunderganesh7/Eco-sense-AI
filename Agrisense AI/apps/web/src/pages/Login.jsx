@@ -306,7 +306,7 @@ export default function Login() {
                 title="Autofill verified demo account credentials"
               >
                 <span className="material-symbols-outlined text-sm text-[#087F5B]">bolt</span>
-                <span><AzureTranslate text="Quick Demo Access (Sunderganesh)" /></span>
+                <span><AzureTranslate text="Quick Demo Access" /></span>
               </button>
             )}
           </form>

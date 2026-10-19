@@ -1,5 +1,5 @@
 """
-Auth Service — MySQL & SQLAlchemy-based user registration, login, and JWT management.
+Auth Service — Database-Free Demo Authentication, MySQL & SQLAlchemy user registration, login, and JWT management.
 """
 
 import os
@@ -10,27 +10,91 @@ from datetime import datetime, timedelta
 from database import get_db_context, init_db as init_database, check_connection
 from models import User, Profile
 
-# ── Configuration ─────────────────────────────────────
+# ── Configuration ─────────────────────────────────────────────────────────────
 JWT_SECRET = os.environ.get("JWT_SECRET", "smartcrop-fasalai-secret-key-2026-sih25010")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_DAYS = 30
 
+# Demo User Configuration (Database-free public demonstration credentials)
+DEMO_EMAIL = os.environ.get("DEMO_EMAIL", "admin@capportal.gov.in").strip().lower()
+DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "admin123")
+DEMO_NAME = os.environ.get("DEMO_NAME", "Sunderganesh")
+DEMO_PHONE = os.environ.get("DEMO_PHONE", "+91 98765 43210")
+DEMO_USER_ID = int(os.environ.get("DEMO_USER_ID", "-1"))
+DEMO_ROLE = "demo_user"  # Explicitly restricted role, NOT administrator!
+
 
 def init_db():
     """Verify MySQL database connection and schema at startup."""
-    return init_database()
+    try:
+        return init_database()
+    except Exception as e:
+        print(f"  [WARN] Database initialization skipped or offline: {e}")
+        return False
 
 
-def _generate_token(user_id: int, phone: str, name: str) -> str:
+def _generate_token(
+    user_id: int,
+    phone: str,
+    name: str,
+    email: str = "",
+    role: str = "farmer",
+    is_demo: bool = False,
+) -> str:
     """Generate a JWT token for a user."""
     payload = {
         "user_id": user_id,
         "phone": phone,
         "name": name,
+        "email": email,
+        "role": role,
+        "is_demo": is_demo,
         "exp": datetime.utcnow() + timedelta(days=JWT_EXPIRY_DAYS),
         "iat": datetime.utcnow(),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def check_demo_login(ident: str, password: str) -> dict | None:
+    """
+    Check if credentials match configured demo credentials without database access.
+    Returns auth payload if matched, raises ValueError if demo identifier with incorrect password,
+    or returns None if identifier does not match demo credentials.
+    """
+    if not ident:
+        return None
+    clean = ident.strip().lower()
+    is_demo_id = (
+        clean == DEMO_EMAIL
+        or clean == "admin@capportal.gov.in"
+        or clean == DEMO_PHONE.lower()
+    )
+    if not is_demo_id:
+        return None
+
+    if password != DEMO_PASSWORD:
+        raise ValueError("Invalid email address or password")
+
+    token = _generate_token(
+        user_id=DEMO_USER_ID,
+        phone=DEMO_PHONE,
+        name=DEMO_NAME,
+        email=DEMO_EMAIL,
+        role=DEMO_ROLE,
+        is_demo=True,
+    )
+    return {
+        "token": token,
+        "access_token": token,
+        "user": {
+            "id": DEMO_USER_ID,
+            "phone": DEMO_PHONE,
+            "email": DEMO_EMAIL,
+            "name": DEMO_NAME,
+            "role": DEMO_ROLE,
+            "is_demo": True,
+        },
+    }
 
 
 def register_user(phone: str = "", password: str = "", name: str = "", email: str = "") -> dict:
@@ -45,6 +109,9 @@ def register_user(phone: str = "", password: str = "", name: str = "", email: st
         raise ValueError("Phone number or email is required")
     if not password:
         raise ValueError("Password is required")
+
+    if email == DEMO_EMAIL or phone == DEMO_PHONE:
+        raise ValueError("This email/phone is reserved for public demonstration access.")
 
     # If phone is not provided, use email as the phone identifier to satisfy not-null constraint
     if not phone:
@@ -87,23 +154,31 @@ def register_user(phone: str = "", password: str = "", name: str = "", email: st
         db.flush()
 
         user_id = new_user.id
-        token = _generate_token(user_id, phone, name)
+        token = _generate_token(user_id, phone, name, email=email, role="farmer", is_demo=False)
         return {
             "token": token,
             "access_token": token,
-            "user": {"id": user_id, "phone": phone, "email": email, "name": name},
+            "user": {"id": user_id, "phone": phone, "email": email, "name": name, "role": "farmer", "is_demo": False},
         }
 
 
 def login_user(phone: str, password: str) -> dict:
     """
-    Login a user from MySQL by phone or email. Returns {"token": ..., "access_token": ..., "user": {...}}.
+    Login a user from MySQL by phone or email.
+    Intercepts demo credentials for database-free authentication.
+    Returns {"token": ..., "access_token": ..., "user": {...}}.
     Raises ValueError if credentials are invalid.
     """
     ident = (phone or "").strip()
     if not ident or not password:
         raise ValueError("Email and password are required")
 
+    # 1. Database-free demo authentication path
+    demo_auth = check_demo_login(ident, password)
+    if demo_auth is not None:
+        return demo_auth
+
+    # 2. Database authentication path for real registered users
     with get_db_context() as db:
         user = db.query(User).filter(
             (User.phone == ident) | (User.email == ident.lower())
@@ -114,11 +189,25 @@ def login_user(phone: str, password: str) -> dict:
         if not bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
             raise ValueError("Invalid email address or password")
 
-        token = _generate_token(user.id, user.phone, user.name)
+        token = _generate_token(
+            user.id,
+            user.phone,
+            user.name,
+            email=user.email or "",
+            role="farmer",
+            is_demo=False,
+        )
         return {
             "token": token,
             "access_token": token,
-            "user": {"id": user.id, "phone": user.phone, "name": user.name, "email": user.email},
+            "user": {
+                "id": user.id,
+                "phone": user.phone,
+                "name": user.name,
+                "email": user.email,
+                "role": "farmer",
+                "is_demo": False,
+            },
         }
 
 
@@ -126,13 +215,17 @@ def get_current_user(token: str) -> dict:
     """
     Decode a JWT token and return the user payload.
     Raises ValueError if token is invalid or expired.
+    Validates demo tokens cryptographically without requiring database access.
     """
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return {
             "user_id": payload["user_id"],
-            "phone": payload["phone"],
+            "phone": payload.get("phone", ""),
             "name": payload.get("name", ""),
+            "email": payload.get("email", ""),
+            "role": payload.get("role", "farmer"),
+            "is_demo": bool(payload.get("is_demo", False)),
         }
     except jwt.ExpiredSignatureError:
         raise ValueError("Token has expired. Please login again.")
@@ -175,10 +268,11 @@ def google_login(access_token: str) -> dict:
                 if not user.name and name:
                     user.name = name
                     db.flush()
-                token = _generate_token(user.id, user.phone, user.name)
+                token = _generate_token(user.id, user.phone, user.name, email=email, role="farmer", is_demo=False)
                 return {
                     "token": token,
-                    "user": {"id": user.id, "phone": user.phone, "name": user.name, "email": email},
+                    "access_token": token,
+                    "user": {"id": user.id, "phone": user.phone, "name": user.name, "email": email, "role": "farmer", "is_demo": False},
                 }
             else:
                 import secrets
@@ -205,10 +299,11 @@ def google_login(access_token: str) -> dict:
                 db.add(new_profile)
                 db.flush()
 
-                token = _generate_token(new_user.id, email, name)
+                token = _generate_token(new_user.id, email, name, email=email, role="farmer", is_demo=False)
                 return {
                     "token": token,
-                    "user": {"id": new_user.id, "phone": email, "name": name, "email": email},
+                    "access_token": token,
+                    "user": {"id": new_user.id, "phone": email, "name": name, "email": email, "role": "farmer", "is_demo": False},
                 }
     except Exception as e:
         raise ValueError(f"Google login failed: {str(e)}")

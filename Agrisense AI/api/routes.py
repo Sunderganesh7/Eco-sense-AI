@@ -296,85 +296,166 @@ async def api_google_login(req: GoogleLoginRequest):
 @router.get("/profile/me")
 async def api_get_profile(request: Request):
     user = _extract_user(request)
-    profile = get_profile(user["user_id"])
-    if profile:
-        if "phone" not in profile or not profile["phone"]:
-            profile["phone"] = user.get("phone", "")
-        return {"profile": profile}
-    return {"profile": {"name": user.get("name", ""), "phone": user.get("phone", "")}}
+    if user.get("is_demo"):
+        return {
+            "profile": {
+                "id": user["user_id"],
+                "user_id": user["user_id"],
+                "name": user.get("name", "Sunderganesh"),
+                "email": user.get("email", "admin@capportal.gov.in"),
+                "phone": user.get("phone", "+91 98765 43210"),
+                "language": "en",
+                "role": "demo_user",
+                "state": "Punjab",
+                "district": "Amritsar",
+                "crops_grown": ["Wheat", "Rice"],
+                "notifications": {"weather": True, "pests": False},
+                "is_demo": True,
+                "notice": "Demo session: Profile is running in demonstration mode without database persistence."
+            }
+        }
+    try:
+        profile = get_profile(user["user_id"])
+        if profile:
+            if "phone" not in profile or not profile["phone"]:
+                profile["phone"] = user.get("phone", "")
+            return {"profile": profile}
+        return {"profile": {"name": user.get("name", ""), "phone": user.get("phone", "")}}
+    except Exception:
+        return {
+            "profile": {
+                "name": user.get("name", ""),
+                "phone": user.get("phone", ""),
+                "notice": "Database offline: Profile persistence currently unavailable."
+            }
+        }
 
 
 @router.put("/profile")
 @router.put("/profile/me")
 async def api_save_profile(req: ProfileRequest, request: Request):
     user = _extract_user(request)
+    if user.get("is_demo"):
+        raise HTTPException(
+            status_code=403,
+            detail="Demo Mode: Profile editing is disabled in demo mode. A database connection is required for persistent profile storage."
+        )
     try:
         saved = save_profile(user["user_id"], req.model_dump())
         return {"profile": saved, "message": "Profile saved successfully"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.delete("/profile")
 @router.delete("/profile/me")
 async def api_delete_profile(request: Request):
     user = _extract_user(request)
-    delete_profile(user["user_id"])
-    return {"message": "Profile and account deleted"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Demo account cannot be deleted.")
+    try:
+        delete_profile(user["user_id"])
+        return {"message": "Profile and account deleted"}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
-# ── Fields ────────────────────────────────────────────────
+# ── Fields ────────────────────────────────────────────────────────────────────
 
 @router.get("/fields")
 async def api_get_fields(request: Request):
     """Get all fields/plots for the authenticated user."""
     user = _extract_user(request)
-    fields = get_fields(user["user_id"])
-    return {"fields": fields, "total": len(fields)}
+    if user.get("is_demo"):
+        return {
+            "fields": [],
+            "total": 0,
+            "is_demo": True,
+            "notice": "Demo Mode: Field persistence requires a database connection. Showing empty field list for demo session."
+        }
+    try:
+        fields = get_fields(user["user_id"])
+        return {"fields": fields, "total": len(fields)}
+    except Exception:
+        return {
+            "fields": [],
+            "total": 0,
+            "notice": "Database is currently offline. Field persistence requires an active database."
+        }
 
 
 @router.get("/fields/{field_id}")
 async def api_get_field(field_id: int, request: Request):
     """Get a single field by ID."""
     user = _extract_user(request)
-    field = get_field(user["user_id"], field_id)
-    if not field:
-        raise HTTPException(status_code=404, detail="Field not found")
-    return {"field": field}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=404, detail="Demo Mode: Saved fields require an active database.")
+    try:
+        field = get_field(user["user_id"], field_id)
+        if not field:
+            raise HTTPException(status_code=404, detail="Field not found")
+        return {"field": field}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.post("/fields")
 async def api_create_field(req: FieldRequest, request: Request):
     """Create a new field/plot."""
     user = _extract_user(request)
+    if user.get("is_demo"):
+        raise HTTPException(
+            status_code=403,
+            detail="Demo Mode: Adding new fields is disabled in demo mode. A database connection is required for saving fields."
+        )
     try:
         field = create_field(user["user_id"], req.to_service_dict())
         return {"field": field, "message": "Field created successfully"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.put("/fields/{field_id}")
 async def api_update_field(field_id: int, req: FieldRequest, request: Request):
     """Update an existing field."""
     user = _extract_user(request)
-    updated = update_field(user["user_id"], field_id, req.to_service_dict())
-    if not updated:
-        raise HTTPException(status_code=404, detail="Field not found")
-    return {"field": updated, "message": "Field updated successfully"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Field modification is disabled in demo mode.")
+    try:
+        updated = update_field(user["user_id"], field_id, req.to_service_dict())
+        if not updated:
+            raise HTTPException(status_code=404, detail="Field not found")
+        return {"field": updated, "message": "Field updated successfully"}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.delete("/fields/{field_id}")
 async def api_delete_field(field_id: int, request: Request):
     """Delete a field."""
     user = _extract_user(request)
-    deleted = delete_field(user["user_id"], field_id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Field not found")
-    return {"message": "Field deleted successfully"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Field deletion is disabled in demo mode.")
+    try:
+        deleted = delete_field(user["user_id"], field_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Field not found")
+        return {"message": "Field deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
-# ── Recommendation History ────────────────────────────────
+# ── Recommendation History ──────────────────────────────────────────────────
 
 @router.get("/recommendations/history")
 async def api_get_recommendation_history(
@@ -383,19 +464,34 @@ async def api_get_recommendation_history(
 ):
     """Get the user's crop recommendation history."""
     user = _extract_user(request)
-    history = get_recommendation_history(user["user_id"], limit)
-    return {"history": history, "total": len(history)}
+    if user.get("is_demo"):
+        return {
+            "history": [],
+            "total": 0,
+            "is_demo": True,
+            "notice": "Demo Mode: Recommendation history persistence requires an active database."
+        }
+    try:
+        history = get_recommendation_history(user["user_id"], limit)
+        return {"history": history, "total": len(history)}
+    except Exception:
+        return {"history": [], "total": 0, "notice": "Database is currently offline."}
 
 
 @router.delete("/recommendations/history/{record_id}")
 async def api_delete_recommendation(record_id: int, request: Request):
     """Delete a recommendation history entry."""
     user = _extract_user(request)
-    delete_recommendation(user["user_id"], record_id)
-    return {"message": "Recommendation deleted"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Deleting recommendation history requires an active database.")
+    try:
+        delete_recommendation(user["user_id"], record_id)
+        return {"message": "Recommendation deleted"}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
-# ── Disease Scan History ──────────────────────────────────
+# ── Disease Scan History ─────────────────────────────────────────────────────
 
 @router.get("/disease/history")
 async def api_get_disease_history(
@@ -404,19 +500,34 @@ async def api_get_disease_history(
 ):
     """Get the user's disease scan history."""
     user = _extract_user(request)
-    history = get_disease_history(user["user_id"], limit)
-    return {"history": history, "total": len(history)}
+    if user.get("is_demo"):
+        return {
+            "history": [],
+            "total": 0,
+            "is_demo": True,
+            "notice": "Demo Mode: Disease scan history requires an active database."
+        }
+    try:
+        history = get_disease_history(user["user_id"], limit)
+        return {"history": history, "total": len(history)}
+    except Exception:
+        return {"history": [], "total": 0, "notice": "Database is currently offline."}
 
 
 @router.delete("/disease/history/{scan_id}")
 async def api_delete_disease_scan(scan_id: int, request: Request):
     """Delete a disease scan history entry."""
     user = _extract_user(request)
-    delete_disease_scan(user["user_id"], scan_id)
-    return {"message": "Scan deleted"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Deleting disease scan history requires an active database.")
+    try:
+        delete_disease_scan(user["user_id"], scan_id)
+        return {"message": "Scan deleted"}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
-# ── Crop Plans (Rotation Planner) ─────────────────────────
+# ── Crop Plans (Rotation Planner) ────────────────────────────────────────────
 
 @router.get("/plans")
 async def api_get_plans(
@@ -426,43 +537,64 @@ async def api_get_plans(
 ):
     """Get all crop plans for the user."""
     user = _extract_user(request)
-    if grouped:
-        plans = get_plans_grouped(user["user_id"], year)
-    else:
-        plans = get_plans(user["user_id"], year)
-    return {"plans": plans, "total": len(plans)}
+    if user.get("is_demo"):
+        return {"plans": [] if not grouped else {}, "total": 0, "is_demo": True, "notice": "Demo Mode: Crop plans require an active database."}
+    try:
+        if grouped:
+            plans = get_plans_grouped(user["user_id"], year)
+        else:
+            plans = get_plans(user["user_id"], year)
+        return {"plans": plans, "total": len(plans)}
+    except Exception:
+        return {"plans": [] if not grouped else {}, "total": 0, "notice": "Database is currently offline."}
 
 
 @router.post("/plans")
 async def api_create_plan(req: CropPlanRequest, request: Request):
     """Create a new crop plan entry."""
     user = _extract_user(request)
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Saving crop plans requires an active database.")
     try:
         plan = create_plan(user["user_id"], req.model_dump())
         return {"plan": plan, "message": "Plan entry created"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.put("/plans/{plan_id}")
 async def api_update_plan(plan_id: int, req: CropPlanRequest, request: Request):
     """Update an existing crop plan entry."""
     user = _extract_user(request)
-    updated = update_plan(user["user_id"], plan_id, req.model_dump())
-    if not updated:
-        raise HTTPException(status_code=404, detail="Plan entry not found")
-    return {"plan": updated, "message": "Plan updated"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Updating crop plans requires an active database.")
+    try:
+        updated = update_plan(user["user_id"], plan_id, req.model_dump())
+        if not updated:
+            raise HTTPException(status_code=404, detail="Plan entry not found")
+        return {"plan": updated, "message": "Plan updated"}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.delete("/plans/{plan_id}")
 async def api_delete_plan(plan_id: int, request: Request):
     """Delete a crop plan entry."""
     user = _extract_user(request)
-    delete_plan(user["user_id"], plan_id)
-    return {"message": "Plan entry deleted"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Deleting crop plans requires an active database.")
+    try:
+        delete_plan(user["user_id"], plan_id)
+        return {"message": "Plan entry deleted"}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
-# ── Health ────────────────────────────────────────────────
+# ── Health ───────────────────────────────────────────────────────────────────
 
 @router.get("/health")
 async def health_check():
@@ -556,7 +688,7 @@ async def get_crop_recommendation(req: CropRecommendRequest, request: Request):
 
         # Save to history if user is authenticated (non-blocking — don't fail if not logged in)
         user = _try_extract_user(request)
-        if user:
+        if user and not user.get("is_demo"):
             try:
                 save_recommendation(
                     user_id=user["user_id"],
@@ -674,7 +806,7 @@ async def disease_detect(
 
         # Save to history if user is authenticated (non-blocking)
         user = _try_extract_user(request)
-        if user:
+        if user and not user.get("is_demo"):
             try:
                 save_disease_scan(
                     user_id=user["user_id"],
@@ -868,18 +1000,23 @@ async def trigger_weather_alert_check(request: Request):
 async def get_my_alerts(request: Request, limit: int = Query(default=10, ge=1, le=50)):
     """Get the current user's recent weather alerts from MySQL."""
     user = _extract_user(request)
-    from database import get_db_context
-    from models import WeatherAlert
-    with get_db_context() as db:
-        alerts = (
-            db.query(WeatherAlert)
-            .filter(WeatherAlert.user_id == user["user_id"])
-            .order_by(WeatherAlert.sent_at.desc())
-            .limit(limit)
-            .all()
-        )
-        data = [a.to_dict() for a in alerts]
-        return {"alerts": data, "total": len(data)}
+    if user.get("is_demo"):
+        return {"alerts": [], "total": 0, "is_demo": True, "notice": "Demo Mode: Weather alerts require an active database."}
+    try:
+        from database import get_db_context
+        from models import WeatherAlert
+        with get_db_context() as db:
+            alerts = (
+                db.query(WeatherAlert)
+                .filter(WeatherAlert.user_id == user["user_id"])
+                .order_by(WeatherAlert.sent_at.desc())
+                .limit(limit)
+                .all()
+            )
+            data = [a.to_dict() for a in alerts]
+            return {"alerts": data, "total": len(data)}
+    except Exception:
+        return {"alerts": [], "total": 0, "notice": "Database is currently offline."}
 
 
 
@@ -1100,9 +1237,14 @@ async def generate_crop_plan_endpoint(req: PlanGenerateRequest):
 async def get_crop_plans_endpoint(request: Request, year: Optional[int] = Query(default=None)):
     """Get all saved crop rotation plans for the authenticated user from MySQL."""
     user = _extract_user(request)
-    plans = get_plans_grouped(user["user_id"], year)
-    flat_plans = get_plans(user["user_id"], year)
-    return {"plans": plans if plans else flat_plans, "grouped": plans, "total": len(flat_plans)}
+    if user.get("is_demo"):
+        return {"plans": [], "grouped": {}, "total": 0, "is_demo": True, "notice": "Demo Mode: Crop plans require an active database."}
+    try:
+        plans = get_plans_grouped(user["user_id"], year)
+        flat_plans = get_plans(user["user_id"], year)
+        return {"plans": plans if plans else flat_plans, "grouped": plans, "total": len(flat_plans)}
+    except Exception:
+        return {"plans": [], "grouped": {}, "total": 0, "notice": "Database is currently offline."}
 
 
 @router.post("/planner/plans")
@@ -1110,47 +1252,59 @@ async def get_crop_plans_endpoint(request: Request, year: Optional[int] = Query(
 async def save_crop_plan_endpoint(req: PlanSaveRequest, request: Request):
     """Save a crop rotation plan to MySQL."""
     user = _extract_user(request)
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Saving crop rotation plans requires an active database.")
     plot_label = req.plot_label or req.field_name or "Main Plot"
 
-    # If plan_data array is provided, save multiple entries
-    if req.plan_data:
-        saved_entries = []
-        for item in req.plan_data:
+    try:
+        # If plan_data array is provided, save multiple entries
+        if req.plan_data:
+            saved_entries = []
+            for item in req.plan_data:
+                entry = create_plan(user["user_id"], {
+                    "field_id": req.field_id,
+                    "plot_label": plot_label,
+                    "year": item.get("year", req.year),
+                    "crop": item.get("recommended_crop", item.get("crop", "")),
+                    "season": item.get("season", ""),
+                    "start_month": item.get("start_month", 1),
+                    "end_month": item.get("end_month", 3),
+                })
+                saved_entries.append(entry)
+            return {"saved": saved_entries, "message": f"Saved {len(saved_entries)} plan entries to MySQL"}
+        else:
             entry = create_plan(user["user_id"], {
                 "field_id": req.field_id,
                 "plot_label": plot_label,
-                "year": item.get("year", req.year),
-                "crop": item.get("recommended_crop", item.get("crop", "")),
-                "season": item.get("season", ""),
-                "start_month": item.get("start_month", 1),
-                "end_month": item.get("end_month", 3),
+                "year": req.year,
+                "crop": req.crop,
+                "season": req.season,
+                "start_month": req.start_month,
+                "end_month": req.end_month,
             })
-            saved_entries.append(entry)
-        return {"saved": saved_entries, "message": f"Saved {len(saved_entries)} plan entries to MySQL"}
-    else:
-        entry = create_plan(user["user_id"], {
-            "field_id": req.field_id,
-            "plot_label": plot_label,
-            "year": req.year,
-            "crop": req.crop,
-            "season": req.season,
-            "start_month": req.start_month,
-            "end_month": req.end_month,
-        })
-        return {"plan": entry, "message": "Crop plan saved successfully"}
+            return {"plan": entry, "message": "Crop plan saved successfully"}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.delete("/planner/plans/{plan_id}")
 async def delete_crop_plan_endpoint(plan_id: int, request: Request):
     """Delete a saved crop rotation plan entry."""
     user = _extract_user(request)
-    deleted = delete_plan(user["user_id"], plan_id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Crop plan not found")
-    return {"message": "Crop plan deleted successfully"}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Deleting crop plans requires an active database.")
+    try:
+        deleted = delete_plan(user["user_id"], plan_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Crop plan not found")
+        return {"message": "Crop plan deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
-# ── Community Chat ───────────────────────────────────────
+# ── Community Chat ────────────────────────────────────────────────────────────
 
 @router.get("/community/messages")
 async def get_community_messages(
@@ -1158,49 +1312,60 @@ async def get_community_messages(
     before: Optional[int] = Query(default=None, description="Get messages before this ID"),
 ):
     """Get community chat messages from MySQL (paginated)."""
-    from database import get_db_context
-    from models import CommunityMessage
-    with get_db_context() as db:
-        query = db.query(CommunityMessage)
-        if before:
-            query = query.filter(CommunityMessage.id < before)
-        messages = query.order_by(CommunityMessage.created_at.desc()).limit(limit).all()
-        data = list(reversed([m.to_dict() for m in messages]))
-        return {"messages": data, "total": len(data)}
+    try:
+        from database import get_db_context
+        from models import CommunityMessage
+        with get_db_context() as db:
+            query = db.query(CommunityMessage)
+            if before:
+                query = query.filter(CommunityMessage.id < before)
+            messages = query.order_by(CommunityMessage.created_at.desc()).limit(limit).all()
+            data = list(reversed([m.to_dict() for m in messages]))
+            return {"messages": data, "total": len(data)}
+    except Exception:
+        return {"messages": [], "total": 0, "notice": "Community chat requires an active database."}
 
 
 @router.post("/community/messages")
 async def send_community_message(req: CommunityMessageRequest, request: Request):
     """Send a message to the community chat and save in MySQL."""
     user = _extract_user(request)
-    from database import get_db_context
-    from models import CommunityMessage
-    with get_db_context() as db:
-        new_msg = CommunityMessage(
-            user_id=user["user_id"],
-            user_name=user.get("name") or "Anonymous",
-            message=req.message.strip(),
-            message_type="text",
-        )
-        db.add(new_msg)
-        db.flush()
-        return {"message": new_msg.to_dict(), "success": True}
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Community chat posting is disabled in demo mode.")
+    try:
+        from database import get_db_context
+        from models import CommunityMessage
+        with get_db_context() as db:
+            new_msg = CommunityMessage(
+                user_id=user["user_id"],
+                user_name=user.get("name") or "Anonymous",
+                message=req.message.strip(),
+                message_type="text",
+            )
+            db.add(new_msg)
+            db.flush()
+            return {"message": new_msg.to_dict(), "success": True}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.get("/community/online")
 async def get_online_count():
     """Get approximate online user count based on recent activity."""
-    import datetime
-    from database import get_db_context
-    from models import CommunityMessage
-    cutoff = datetime.datetime.utcnow() - datetime.timedelta(minutes=5)
-    with get_db_context() as db:
-        recent = db.query(CommunityMessage.user_id).filter(CommunityMessage.created_at >= cutoff).all()
-        unique_users = set(r[0] for r in recent)
-        return {"online_count": max(1, len(unique_users)), "active_in_last_5min": len(unique_users)}
+    try:
+        import datetime
+        from database import get_db_context
+        from models import CommunityMessage
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(minutes=5)
+        with get_db_context() as db:
+            recent = db.query(CommunityMessage.user_id).filter(CommunityMessage.created_at >= cutoff).all()
+            unique_users = set(r[0] for r in recent)
+            return {"online_count": max(1, len(unique_users)), "active_in_last_5min": len(unique_users)}
+    except Exception:
+        return {"online_count": 1, "active_in_last_5min": 1}
 
 
-# ── Feedback ─────────────────────────────────────────────
+# ── Feedback ──────────────────────────────────────────────────────────────────
 
 class FeedbackRequest(BaseModel):
     area: str = "general"
@@ -1213,23 +1378,28 @@ class FeedbackRequest(BaseModel):
 async def submit_feedback(req: FeedbackRequest, request: Request):
     """Submit user feedback to MySQL."""
     user = _extract_user(request)
+    if user.get("is_demo"):
+        raise HTTPException(status_code=403, detail="Demo Mode: Feedback submission is disabled in demo mode.")
     msg = req.message.strip() or (req.comment or "").strip()
     if not msg:
         raise HTTPException(status_code=400, detail="Feedback message cannot be empty")
     area = req.area.strip() or "general"
 
-    from database import get_db_context
-    from models import Feedback
-    with get_db_context() as db:
-        new_fb = Feedback(
-            user_id=user["user_id"],
-            user_name=user.get("name") or "Anonymous",
-            area=req.area.strip(),
-            message=req.message.strip(),
-        )
-        db.add(new_fb)
-        db.flush()
-        return {"feedback": new_fb.to_dict(), "success": True}
+    try:
+        from database import get_db_context
+        from models import Feedback
+        with get_db_context() as db:
+            new_fb = Feedback(
+                user_id=user["user_id"],
+                user_name=user.get("name") or "Anonymous",
+                area=req.area.strip(),
+                message=req.message.strip(),
+            )
+            db.add(new_fb)
+            db.flush()
+            return {"feedback": new_fb.to_dict(), "success": True}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database service is currently offline.")
 
 
 @router.get("/feedback")
@@ -1239,22 +1409,24 @@ async def get_feedback_history(
 ):
     """Get the current user's feedback history from MySQL."""
     user = _extract_user(request)
-    from database import get_db_context
-    from models import Feedback
-    with get_db_context() as db:
-        fbs = (
-            db.query(Feedback)
-            .filter(Feedback.user_id == user["user_id"])
-            .order_by(Feedback.created_at.desc())
-            .limit(limit)
-            .all()
-        )
-        data = [f.to_dict() for f in fbs]
-        return {"feedback": data, "total": len(data)}
+    if user.get("is_demo"):
+        return {"feedback": [], "total": 0, "is_demo": True, "notice": "Demo Mode: Feedback history requires an active database."}
+    try:
+        from database import get_db_context
+        from models import Feedback
+        with get_db_context() as db:
+            fbs = (
+                db.query(Feedback)
+                .filter(Feedback.user_id == user["user_id"])
+                .order_by(Feedback.created_at.desc())
+                .limit(limit)
+                .all()
+            )
+            data = [f.to_dict() for f in fbs]
+            return {"feedback": data, "total": len(data)}
+    except Exception:
+        return {"feedback": [], "total": 0, "notice": "Database is currently offline."}
 
-
-
-# ── Speech-to-Text (Azure) ──────────────────────────────
 
 @router.post("/speech-to-text")
 async def speech_to_text_endpoint(
