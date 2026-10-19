@@ -125,9 +125,19 @@ app.include_router(assistant.router, prefix="/api")
 def health_check():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
-# Serve frontend static files
-frontend_dist = os.path.join(os.path.dirname(__file__), "../../frontend/dist")
-app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+# Serve frontend static files conditionally if directory exists (e.g. standalone backend deployment)
+frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../frontend/dist"))
+if os.path.isdir(frontend_dist):
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+else:
+    @app.get("/", tags=["Root"])
+    def root():
+        return {
+            "status": "online",
+            "service": settings.PROJECT_NAME,
+            "version": settings.VERSION,
+            "message": "PlantWise AI Backend API is active. Frontend is hosted separately."
+        }
 
 if __name__ == "__main__":
     import uvicorn
