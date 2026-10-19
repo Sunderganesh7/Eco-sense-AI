@@ -16,7 +16,8 @@
     "dev:greenpath": "cd \"GreenPath AI/GreenPath AI\" && .venv\\Scripts\\python.exe app.py",
     "dev:agrisense": "concurrently \"npm run dev:agrisense:backend\" \"npm run dev:agrisense:frontend\"",
     "dev:agrisense:backend": "cd \"Agrisense AI/api\" && ..\\venv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8003",
-    "dev:agrisense:frontend": "cd \"Agrisense AI/apps/web\" && npm run dev"
+    "dev:agrisense:frontend": "cd \"Agrisense AI/apps/web\" && npm run dev",
+    "build": "vite build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
