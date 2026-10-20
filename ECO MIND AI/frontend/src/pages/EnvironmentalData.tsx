@@ -213,7 +213,10 @@ export const EnvironmentalData: React.FC = () => {
       refresh();
       setSuccessMessage(`Environmental observations for Profile #${profileId} successfully saved and downstream pipeline updated!`);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to save environmental observations.');
+      const msg = err.message === 'Failed to fetch'
+        ? 'Failed to connect to the EcoMind backend server (https://ecomind-ai-5.onrender.com). Please verify network access and ensure the backend is running.'
+        : (err.message || 'Failed to save environmental observations.');
+      setErrorMessage(msg);
     } finally {
       setSaving(false);
     }

@@ -23,11 +23,22 @@ export const EnvironmentalService = {
   getRecommendations: (id: number) => 
     fetchApi<GuardedRecommendationProfileResponse>(`/profiles/${id}/recommendations`, { method: 'POST' }),
 
-  updateProfile: (id: number, data: any) =>
-    fetchApi<EnvironmentalObservation>(`/profiles/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    }),
+  updateProfile: async (id: number, data: any) => {
+    try {
+      return await fetchApi<EnvironmentalObservation>(`/profiles/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    } catch (err: any) {
+      if (err.message && (err.message.includes('404') || err.message.includes('Not Found'))) {
+        return await fetchApi<EnvironmentalObservation>(`/profiles`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        });
+      }
+      throw err;
+    }
+  },
 
   createProfile: (data: any) =>
     fetchApi<EnvironmentalObservation>(`/profiles`, {

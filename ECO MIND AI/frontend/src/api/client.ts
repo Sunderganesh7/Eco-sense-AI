@@ -23,7 +23,14 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`API Error ${response.status}: ${errText}`);
+    let detail = errText;
+    try {
+      const parsed = JSON.parse(errText);
+      if (parsed.message) detail = parsed.message;
+      else if (parsed.error?.message) detail = parsed.error.message;
+      else if (parsed.detail) detail = typeof parsed.detail === 'string' ? parsed.detail : JSON.stringify(parsed.detail);
+    } catch (_) {}
+    throw new Error(`API Error (${response.status}): ${detail}`);
   }
 
   return response.json();

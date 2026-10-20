@@ -26,12 +26,11 @@ def get_profile(id: int, db: Session = Depends(get_db)):
 @router.put("/{id}", response_model=EnvironmentalObservation, summary="Update an existing environmental profile")
 def update_profile(id: int, profile_data: EnvironmentalObservationCreate, db: Session = Depends(get_db)):
     """
-    Updates an environmental profile by its ID.
-    Returns 404 if the profile does not exist.
+    Updates an environmental profile by its ID, or creates it if it does not exist yet.
     """
     db_obs = profile_service.update_profile(db, id, profile_data)
     if not db_obs:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        db_obs = profile_service.create_profile(db, profile_data)
     return db_obs
 
 from app.reasoning.baseline.analyzer import BaselineAnalyzer
