@@ -1,8 +1,18 @@
 // Base fetch client
-const API_BASE = import.meta.env.VITE_API_URL || '/api/v1';
+const envBase = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://ecomind-ai-5.onrender.com' : '')
+).replace(/\/+$/, '');
+
+// Ensure /api/v1 prefix is appended cleanly without duplicate paths
+export const API_BASE = envBase
+  ? (envBase.endsWith('/api/v1') ? envBase : `${envBase}/api/v1`)
+  : '/api/v1';
 
 export async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const url = `${API_BASE}${endpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${API_BASE}${cleanEndpoint}`;
   const response = await fetch(url, {
     ...options,
     headers: {

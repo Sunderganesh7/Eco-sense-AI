@@ -47,14 +47,40 @@ async def security_headers_and_limits_middleware(request: Request, call_next):
     return response
 
 # CORS configuration
-if settings.BACKEND_CORS_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+cors_origins = []
+if isinstance(settings.BACKEND_CORS_ORIGINS, str):
+    import json
+    try:
+        parsed = json.loads(settings.BACKEND_CORS_ORIGINS)
+        if isinstance(parsed, list):
+            cors_origins = [str(o).strip().rstrip("/") for o in parsed if o]
+        else:
+            cors_origins = [str(settings.BACKEND_CORS_ORIGINS).strip().rstrip("/")]
+    except Exception:
+        cors_origins = [o.strip().rstrip("/") for o in settings.BACKEND_CORS_ORIGINS.split(",") if o.strip()]
+elif isinstance(settings.BACKEND_CORS_ORIGINS, list):
+    cors_origins = [str(o).strip().rstrip("/") for o in settings.BACKEND_CORS_ORIGINS if o]
+
+# Ensure required production origins are always present
+required_origins = [
+    "https://eco-sense-ai-frontend-5zdt.vercel.app",
+    "https://eco-sense-ai-one.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:8000",
+]
+for req in required_origins:
+    if req not in cors_origins:
+        cors_origins.append(req)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Exception handlers
 setup_exception_handlers(app)

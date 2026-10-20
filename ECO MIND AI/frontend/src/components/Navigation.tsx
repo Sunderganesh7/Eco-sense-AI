@@ -129,7 +129,26 @@ export const Navigation: React.FC = () => {
           <Leaf size={18} fill="var(--color-primary)"/> EcoMind AI
         </div>
         <div style={{fontSize: '0.8rem', color: 'var(--color-text-tertiary)', marginTop: '4px'}}>v1.0.0 Enterprise</div>
-        <a href="http://localhost:8000" className="back-to-ecosense">
+        <a 
+          href="https://eco-sense-ai-one.vercel.app/" 
+          target="_top"
+          rel="noopener noreferrer"
+          className="back-to-ecosense"
+          onClick={(e) => {
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+              e.preventDefault();
+              try {
+                if (window.top && window.top !== window) {
+                  window.top.location.href = "https://eco-sense-ai-one.vercel.app/";
+                  return;
+                }
+              } catch (_) {
+                // fall through
+              }
+              window.location.href = "https://eco-sense-ai-one.vercel.app/";
+            }
+          }}
+        >
           <LayoutDashboard size={18} /> Back to Eco Sense
         </a>
       </div>

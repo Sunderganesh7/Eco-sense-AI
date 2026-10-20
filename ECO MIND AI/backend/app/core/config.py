@@ -20,9 +20,14 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_MINUTE: int = 100
     
     # CORS
-    BACKEND_CORS_ORIGINS: List[str] = [
+    BACKEND_CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
-        "https://ecomind-ai-liard.vercel.app"
+        "http://localhost:5174",
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "https://eco-sense-ai-frontend-5zdt.vercel.app",
+        "https://eco-sense-ai-one.vercel.app",
+        "https://ecomind-ai-liard.vercel.app",
     ]
 
     # LLM Settings
