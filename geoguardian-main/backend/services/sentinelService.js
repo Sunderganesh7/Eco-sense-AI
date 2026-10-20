@@ -6,6 +6,10 @@ const SENTINEL_PROCESS_URL = "https://sh.dataspace.copernicus.eu/api/v1/process"
 let accessToken = null;
 let tokenExpiry = 0;
 
+export const isSentinelConfigured = () => {
+  return Boolean(process.env.SENTINEL_CLIENT_ID?.trim() && process.env.SENTINEL_CLIENT_SECRET?.trim());
+};
+
 const getCredentials = () => {
   const clientId = process.env.SENTINEL_CLIENT_ID?.trim();
   const clientSecret = process.env.SENTINEL_CLIENT_SECRET?.trim();

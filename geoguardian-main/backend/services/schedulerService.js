@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { getDb } from "../config/db.js";
+import { getDb, isDbConnected } from "../config/db.js";
 import { saveImage } from "../config/storage.js";
 import { searchSentinelScenes, fetchNdviData, processNdviStatistics, generateNdviColormap } from "./geoguardianService.js";
 import { sendChangeAlert } from "./emailService.js";
@@ -29,4 +29,13 @@ async function checkRegion(region) {
 
 export const manualCheckRegion = async (regionId, userId) => { const [rows] = await getDb().execute("SELECT r.*, u.email FROM monitored_regions r JOIN users u ON u.id = r.user_id WHERE r.id = ? AND r.user_id = ?", [regionId, userId]); if (!rows[0]) throw new Error("Region not found"); return checkRegion(rows[0]); };
 const checkRegionsByFrequency = async (frequency) => { const [regions] = await getDb().execute("SELECT r.*, u.email FROM monitored_regions r JOIN users u ON u.id = r.user_id WHERE r.monitoring_enabled = TRUE AND r.monitoring_frequency = ?", [frequency]); for (const region of regions) await checkRegion(region).catch((error) => console.error(`Scheduled monitoring check for ${region.id} failed:`, error.message)); };
-export const startScheduler = () => { cron.schedule("0 2 * * *", () => checkRegionsByFrequency("daily")); cron.schedule("0 2 * * 0", () => checkRegionsByFrequency("weekly")); cron.schedule("0 2 1 * *", () => checkRegionsByFrequency("monthly")); };
+export const startScheduler = () => {
+  if (!isDbConnected()) {
+    console.info("[SCHEDULER] Database unavailable, scheduled monitoring tasks skipped.");
+    return;
+  }
+  cron.schedule("0 2 * * *", () => checkRegionsByFrequency("daily"));
+  cron.schedule("0 2 * * 0", () => checkRegionsByFrequency("weekly"));
+  cron.schedule("0 2 1 * *", () => checkRegionsByFrequency("monthly"));
+  console.info("[SCHEDULER] Monitoring cron tasks scheduled.");
+};

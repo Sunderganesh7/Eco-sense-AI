@@ -1,6 +1,12 @@
 import { generateTimelapseFrames, generateDateRange, saveTimelapseFrames } from "../services/timelapseService.js";
 import { getImage, getTimelapseFrames as findTimelapseFrames, isId } from "../config/storage.js";
 import { searchSentinelScenes } from "../services/geoguardianService.js";
+import { isSentinelConfigured } from "../services/sentinelService.js";
+import { isDbConnected } from "../config/db.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const parseBbox = (bbox) => {
   const values = (typeof bbox === "string" ? bbox.split(",") : bbox).map(Number);
@@ -20,6 +26,33 @@ export const createTimelapse = async (req, res) => {
     const bboxArray = parseBbox(bbox);
     const maxCloud = Number(cloudThreshold);
     if (!Number.isFinite(maxCloud) || maxCloud < 0 || maxCloud > 100) return res.status(400).json({ success: false, error: "cloudThreshold must be between 0 and 100" });
+    const isDemo = process.env.DEMO_MODE === "true";
+    if (!isSentinelConfigured() && isDemo) {
+      const demoFrames = [
+        { frameId: "demo-frame-1", frameNumber: 1, date: startDate, url: "/satellite_hero.jpg" },
+        { frameId: "demo-frame-2", frameNumber: 2, date: endDate, url: "/compare_hero.jpg" }
+      ];
+      return res.json({
+        success: true,
+        isDemo: true,
+        message: "Demo Mode: Live Sentinel Hub credentials not configured. Showing sample demonstration time-lapse frames.",
+        timelapseId: "demo-timelapse",
+        frames: demoFrames,
+        metadata: {
+          startDate,
+          endDate,
+          frameCount: 2,
+          requestedFrameCount: 2,
+          dates: [startDate, endDate],
+          dimensions: `${width}x${height}`,
+          totalFrames: 2,
+          delay: 800,
+          satelliteSource: "Sentinel-2 L2A (Sample Demonstration Frames)",
+          cloudThreshold: maxCloud,
+          isDemo: true
+        }
+      });
+    }
     const targetDates = generateDateRange(startDate, endDate, Number(intervalDays), 20);
 
     const sceneRequests = [];
@@ -43,4 +76,15 @@ export const createTimelapse = async (req, res) => {
 };
 
 export const getTimelapseFrames = async (req, res) => { try { const frames = await findTimelapseFrames(req.params.parentId); if (!frames.length) return res.status(404).json({ error: "Time-lapse frames not found" }); const metadata = typeof frames[0].metadata === "string" ? JSON.parse(frames[0].metadata) : frames[0].metadata; res.json({ success: true, parentId: req.params.parentId, frameCount: frames.length, frames: frames.map(f => ({ frameId: String(f.id), frameNumber: f.frame_number, date: f.frame_date, url: `/api/timelapse/frame/${f.id}` })), metadata: { startDate: metadata.startDate, endDate: metadata.endDate, bbox: metadata.bbox } }); } catch (error) { res.status(500).json({ error: error.message }); } };
-export const getFrame = async (req, res) => { try { if (!isId(req.params.frameId)) return res.status(400).json({ error: "Invalid frame ID" }); const file = await getImage(req.params.frameId); if (!file) return res.status(404).json({ error: "Frame not found" }); res.set({ "Content-Type": file.content_type, "Content-Length": file.image_data.length, "Cache-Control": "public, max-age=86400", "Access-Control-Allow-Origin": "*" }); res.send(file.image_data); } catch (error) { res.status(500).json({ error: error.message }); } };
+export const getFrame = async (req, res) => {
+  try {
+    if (!isDbConnected() || String(req.params.frameId).startsWith("demo")) {
+      const fallbackPath = path.join(__dirname, "../../frontend/public/satellite_hero.jpg");
+      if (fs.existsSync(fallbackPath)) {
+        res.set({ "Content-Type": "image/jpeg", "Cache-Control": "public, max-age=86400", "Access-Control-Allow-Origin": "*" });
+        return res.sendFile(fallbackPath);
+      }
+      return res.status(404).json({ error: "Frame not found in demo mode" });
+    }
+    if (!isId(req.params.frameId)) return res.status(400).json({ error: "Invalid frame ID" });
+    const file = await getImage(req.params.frameId); if (!file) return res.status(404).json({ error: "Frame not found" }); res.set({ "Content-Type": file.content_type, "Content-Length": file.image_data.length, "Cache-Control": "public, max-age=86400", "Access-Control-Allow-Origin": "*" }); res.send(file.image_data); } catch (error) { res.status(500).json({ error: error.message }); } };

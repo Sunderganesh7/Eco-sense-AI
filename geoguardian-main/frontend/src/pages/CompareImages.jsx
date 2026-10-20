@@ -7,6 +7,7 @@ import FeatureHero from "../components/FeatureHero";
 import axios from "axios";
 import { resultMatchesConfig } from "../utils/analysisDataset";
 import config from "../config";
+import { saveDemoAnalysis } from "../utils/demoStorage";
 
 const API = config.API_URL;
 
@@ -33,33 +34,56 @@ const CompareImages = () => {
     if (!analysisResult) return;
     try {
       setSaving(true);
-      console.log("💾 Saving comparison analysis...");
       const a = analysisResult.analysis;
 
-      await axios.post(
-        `${API}/api/analysis`,
-        {
-          title: `Change Detection: ${a.beforeDate} vs ${a.afterDate}`,
-          description: a.status,
-          location: analysisConfig.locationName || analysisResult?.locationName || "Comparison Area",
-          bbox: analysisConfig.bbox.split(",").map(Number),
-          nasaLayer: "Sentinel-2-L2A",
-          date: a.afterDate,
-          imageFileId: analysisResult.changeImageId,
-          analysis: {
-            changePercentage: a.affectedPercentage,
-            changeType: a.status.includes("decline") ? "decline" : "stable",
-            severity: a.affectedPercentage > 15 ? "high" : a.affectedPercentage > 5 ? "medium" : "low",
-            summary: a.status,
-          },
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Always persist to localStorage demo store
+      saveDemoAnalysis({
+        title: `Change Detection: ${a.beforeDate} vs ${a.afterDate}`,
+        description: a.status,
+        location: analysisConfig.locationName || analysisResult?.locationName || "Comparison Area",
+        bbox: analysisConfig.bbox.split(",").map(Number),
+        nasaLayer: "Sentinel-2-L2A",
+        date: a.afterDate,
+        imageFileId: analysisResult.changeImageId || "/compare_hero.jpg",
+        imageUrl: analysisResult.changeImageUrl || "/compare_hero.jpg",
+        analysis: {
+          changePercentage: a.affectedPercentage,
+          changeType: a.status?.includes("decline") ? "decline" : "stable",
+          severity: a.affectedPercentage > 15 ? "high" : a.affectedPercentage > 5 ? "medium" : "low",
+          summary: a.status
+        }
+      });
 
-      alert("✅ Analysis saved to history!");
+      if (API) {
+        try {
+          await axios.post(
+            `${API}/api/analysis`,
+            {
+              title: `Change Detection: ${a.beforeDate} vs ${a.afterDate}`,
+              description: a.status,
+              location: analysisConfig.locationName || analysisResult?.locationName || "Comparison Area",
+              bbox: analysisConfig.bbox.split(",").map(Number),
+              nasaLayer: "Sentinel-2-L2A",
+              date: a.afterDate,
+              imageFileId: analysisResult.changeImageId || "sample_hero",
+              analysis: {
+                changePercentage: a.affectedPercentage,
+                changeType: a.status?.includes("decline") ? "decline" : "stable",
+                severity: a.affectedPercentage > 15 ? "high" : a.affectedPercentage > 5 ? "medium" : "low",
+                summary: a.status,
+              },
+            },
+            { headers: { Authorization: `Bearer ${token}` }, timeout: 3000 }
+          );
+        } catch (apiErr) {
+          console.info("Backend post skipped or saved in demo:", apiErr.message);
+        }
+      }
+
+      alert("Analysis saved to history!");
     } catch (err) {
-      console.error("❌ Error saving analysis:", err);
-      alert("Failed to save analysis to history: " + err.message);
+      console.error("Error saving analysis:", err);
+      alert("Failed to save analysis: " + err.message);
     } finally {
       setSaving(false);
     }

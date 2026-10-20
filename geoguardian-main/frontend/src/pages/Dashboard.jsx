@@ -5,6 +5,7 @@ import CoordinatesConverter from "../components/CoordinatesConverter";
 import { Satellite, Calendar, Map, Calculator, Download, Info, AlertCircle, CheckCircle, Cloud, RefreshCw, MapPin, Globe, Leaf, Settings, ArrowRight } from "lucide-react";
 import FeatureHero from "../components/FeatureHero";
 import config from "../config";
+import { saveDemoAnalysis } from "../utils/demoStorage";
 
 const Dashboard = () => {
   const [date, setDate] = useState("2024-07-25");
@@ -100,33 +101,48 @@ const Dashboard = () => {
       }
 
       setSaving(true);
-      console.log("💾 Saving analysis...");
 
-      const response = await axios.post(
-        `${config.API_URL}/api/analysis`,
-        {
-          title: `Analysis - ${date}`,
-          description: `Sentinel-2 satellite imagery analysis`,
-          location: "User Location",
-          bbox: metadata.bbox,
-          nasaLayer: "Sentinel-2-L2A",
-          date: metadata.date,
-          imageFileId: imageUrl.split('/').pop(),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      // Persist to browser localStorage demo store
+      saveDemoAnalysis({
+        title: `Analysis - ${date}`,
+        description: metadata.isDemo ? "Demonstration Sentinel-2 satellite imagery analysis" : "Sentinel-2 satellite imagery analysis",
+        location: "User Location",
+        bbox: metadata.bbox,
+        nasaLayer: metadata.layer || "Sentinel-2-L2A",
+        date: metadata.date || date,
+        imageFileId: imageUrl.split('/').pop() || "/satellite_hero.jpg",
+        imageUrl: imageUrl,
+        status: "completed"
+      });
+
+      if (config.API_URL) {
+        try {
+          await axios.post(
+            `${config.API_URL}/api/analysis`,
+            {
+              title: `Analysis - ${date}`,
+              description: `Sentinel-2 satellite imagery analysis`,
+              location: "User Location",
+              bbox: metadata.bbox,
+              nasaLayer: "Sentinel-2-L2A",
+              date: metadata.date || date,
+              imageFileId: imageUrl.split('/').pop() || "sample_hero",
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              timeout: 3000
+            }
+          );
+        } catch (apiErr) {
+          console.info("Backend post skipped or saved in demo:", apiErr.message);
         }
-      );
+      }
 
-      console.log("✅ Analysis saved:", response.data);
-      alert("✅ Analysis saved to history!");
-
+      alert("Analysis saved to history!");
       setImageUrl(null);
       setMetadata(null);
     } catch (error) {
-      console.error("❌ Error saving analysis:", error);
+      console.error("Error saving analysis:", error);
       alert("Failed to save analysis");
     } finally {
       setSaving(false);

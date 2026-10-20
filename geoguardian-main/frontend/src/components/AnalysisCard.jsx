@@ -25,7 +25,7 @@ const AnalysisCard = ({ analysis, onView }) => {
 
   const formatBBox = (bbox) => {
     if (!bbox || bbox.length !== 4) return "N/A";
-    const [west, south, east, north] = bbox;
+    const [west, south] = bbox;
     return `(${west.toFixed(2)}, ${south.toFixed(2)})`;
   };
 

@@ -273,9 +273,14 @@ const AnalysisDetail = ({ analysis, onBack, onDelete }) => {
               <span className="text-[13px] font-semibold flex items-center gap-2"><Satellite className="w-3.5 h-3.5"/> {analysis.nasaLayer}</span>
             </div>
 
-            {analysis.imageFileId ? (
+            {analysis.imageUrl || analysis.imageFileId ? (
               <img
-                src={`${config.API_URL}/api/nasa/image/${analysis.imageFileId}`}
+                src={
+                  analysis.imageUrl ||
+                  (analysis.imageFileId?.startsWith("/") || analysis.imageFileId?.startsWith("http")
+                    ? analysis.imageFileId
+                    : `${config.API_URL}/api/nasa/image/${analysis.imageFileId}`)
+                }
                 alt="Satellite Observation"
                 className="w-full h-full max-h-[700px] object-cover"
                 onError={(e) => {

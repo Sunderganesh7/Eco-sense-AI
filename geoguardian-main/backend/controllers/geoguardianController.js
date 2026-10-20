@@ -9,8 +9,12 @@ import {
   calculateBBoxAreaKm2
 } from "../services/geoguardianService.js";
 import { saveImage, getImage, isId } from "../config/storage.js";
-import { getDb } from "../config/db.js";
-import { fetchSatelliteImage } from "../services/sentinelService.js";
+import { getDb, isDbConnected } from "../config/db.js";
+import { fetchSatelliteImage, isSentinelConfigured } from "../services/sentinelService.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import axios from "axios";
 import { createEnvironmentalReportPdf } from "../services/reportPdfService.js";
 
@@ -87,6 +91,22 @@ export const getScenes = async (req, res) => {
     const bboxArray = parseBbox(bbox);
     const cloudCover = Number(req.query.cloudCover);
     if (!Number.isNaN(cloudCover) && (cloudCover < 0 || cloudCover > 100)) return res.status(400).json({ success: false, error: "cloudCover must be between 0 and 100" });
+    const isDemo = process.env.DEMO_MODE === "true";
+    if (!isSentinelConfigured()) {
+      if (isDemo) {
+        const demoScenes = [
+          { id: "S2A_MSIL2A_DEMO_BEFORE", date: startDate, cloudCover: 4.2, usable: true, isDemo: true, label: "Sample Sentinel-2 Scene (Before)" },
+          { id: "S2B_MSIL2A_DEMO_AFTER", date: endDate, cloudCover: 7.8, usable: true, isDemo: true, label: "Sample Sentinel-2 Scene (After)" }
+        ];
+        return res.json({
+          success: true,
+          totalScenes: demoScenes.length,
+          scenes: demoScenes,
+          isDemo: true,
+          message: "Sentinel Hub API credentials not configured. Showing calibrated sample demonstration scenes."
+        });
+      }
+    }
     const scenes = await searchSentinelScenes(bboxArray, startDate, endDate, Number.isNaN(cloudCover) ? 30 : cloudCover);
     res.json({ success: true, totalScenes: scenes.length, scenes });
   } catch (error) {
@@ -103,6 +123,22 @@ export const getNdvi = async (req, res) => {
     if (!date || !bbox) return res.status(400).json({ error: "Missing required fields: date, bbox" });
 
     const bboxArray = parseBbox(bbox);
+    const isDemo = process.env.DEMO_MODE === "true";
+    if (!isSentinelConfigured() && isDemo) {
+      return res.json({
+        success: true,
+        isDemo: true,
+        imageId: "sample_hero",
+        imageUrl: "/satellite_hero.jpg",
+        statistics: {
+          meanNdvi: 0.524,
+          validPixelPercentage: 98.5,
+          minNdvi: 0.05,
+          maxNdvi: 0.88
+        },
+        metadata: { date, bbox: bboxArray, meanNdvi: 0.524, isDemo: true }
+      });
+    }
     const imageBuffer = await fetchNdviData(date, bboxArray);
     const stats = await processNdviStatistics(imageBuffer);
     const colormap = await generateNdviColormap(stats);
@@ -243,25 +279,30 @@ export const compareNdvi = async (req, res) => {
 
     // Persist record to DB
     let dbRecordId = null;
-    try {
-      const [result] = await getDb().execute(
-        `INSERT INTO geoguardian_records 
-        (user_id, bounding_box, start_date, end_date, selected_scenes, mean_ndvi, before_ndvi, after_ndvi, ndvi_change, affected_area) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          req.user._id, JSON.stringify(bboxArray), beforeDate, afterDate,
-          JSON.stringify([beforeDate, afterDate]),
-          afterStats.meanNdvi, beforeStats.meanNdvi, afterStats.meanNdvi,
-          parseFloat(ndviChange.toFixed(4)), parseFloat(affectedAreaKm2.toFixed(4))
-        ]
-      );
-      dbRecordId = result.insertId;
-      const historyAnalysis = { beforeDate, afterDate, beforeMeanNdvi: beforeStats.meanNdvi, afterMeanNdvi: afterStats.meanNdvi, ndviChange: parseFloat(ndviChange.toFixed(4)), relativeChange, affectedPercentage, affectedAreaKm2: parseFloat(affectedAreaKm2.toFixed(4)), cloudCoverage: null, status, severity: affectedPercentage > 15 ? "high" : affectedPercentage > 5 ? "medium" : "low", satelliteSceneDate: afterDate };
-      const [historyInsert] = await getDb().execute("INSERT INTO analyses (user_id, title, description, location, bbox, nasaLayer, date, image_file_id, analysis_data, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed')", [req.user._id, `NDVI analysis ${afterDate}`, "Sentinel-2 NDVI change analysis", locationInfo.name, JSON.stringify(bboxArray), "Sentinel-2 L2A", new Date(afterDate), afterImageId, JSON.stringify(historyAnalysis)]);
-      historyAnalysis.historyAnalysisId = String(historyInsert.insertId);
-    } catch (dbError) {
-      console.error("Failed to persist completed GeoGuardian analysis:", dbError.message);
-      throw new Error("Analysis completed but could not be saved to the database: " + dbError.message);
+    if (isDbConnected()) {
+      try {
+        const [result] = await getDb().execute(
+          `INSERT INTO geoguardian_records 
+          (user_id, bounding_box, start_date, end_date, selected_scenes, mean_ndvi, before_ndvi, after_ndvi, ndvi_change, affected_area) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            req.user._id, JSON.stringify(bboxArray), beforeDate, afterDate,
+            JSON.stringify([beforeDate, afterDate]),
+            afterStats.meanNdvi, beforeStats.meanNdvi, afterStats.meanNdvi,
+            parseFloat(ndviChange.toFixed(4)), parseFloat(affectedAreaKm2.toFixed(4))
+          ]
+        );
+        dbRecordId = result.insertId;
+        const historyAnalysis = { beforeDate, afterDate, beforeMeanNdvi: beforeStats.meanNdvi, afterMeanNdvi: afterStats.meanNdvi, ndviChange: parseFloat(ndviChange.toFixed(4)), relativeChange, affectedPercentage, affectedAreaKm2: parseFloat(affectedAreaKm2.toFixed(4)), cloudCoverage: null, status, severity: affectedPercentage > 15 ? "high" : affectedPercentage > 5 ? "medium" : "low", satelliteSceneDate: afterDate };
+        const [historyInsert] = await getDb().execute("INSERT INTO analyses (user_id, title, description, location, bbox, nasaLayer, date, image_file_id, analysis_data, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed')", [req.user._id, `NDVI analysis ${afterDate}`, "Sentinel-2 NDVI change analysis", locationInfo.name, JSON.stringify(bboxArray), "Sentinel-2 L2A", new Date(afterDate), afterImageId, JSON.stringify(historyAnalysis)]);
+        historyAnalysis.historyAnalysisId = String(historyInsert.insertId);
+      } catch (dbError) {
+        console.error("Failed to persist completed GeoGuardian analysis:", dbError.message);
+        throw new Error("Analysis completed but could not be saved to the database: " + dbError.message);
+      }
+    } else {
+      console.info("[DEMO MODE] GeoGuardian analysis completed without database persistence.");
+      dbRecordId = `demo-${Date.now()}`;
     }
 
     res.json({
@@ -448,6 +489,18 @@ export const downloadReportPdf = async (req, res) => {
 export const getImageById = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!isDbConnected() || id === "sample_hero" || String(id).startsWith("demo")) {
+      const fallbackPath = path.join(__dirname, "../../frontend/public/satellite_hero.jpg");
+      if (fs.existsSync(fallbackPath)) {
+        res.set({
+          "Content-Type": "image/jpeg",
+          "Cache-Control": "public, max-age=86400",
+          "Access-Control-Allow-Origin": "*"
+        });
+        return res.sendFile(fallbackPath);
+      }
+      return res.status(404).json({ error: "Image not found in demo mode" });
+    }
     if (!isId(id)) return res.status(400).json({ error: "Invalid image ID format" });
     const file = await getImage(id);
     if (!file) return res.status(404).json({ error: "Image not found in storage" });
