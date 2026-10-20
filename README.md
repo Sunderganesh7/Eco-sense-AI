@@ -7,15 +7,15 @@ Eco Sense AI is a comprehensive, unified platform integrating five powerful AI s
 The platform unifies the following specialized AI solutions:
 
 1. **🌳 GreenPath AI** (`http://localhost:5000`)
-   - Intelligent environmental route planning and analysis.
+   - Intelligent environmental route planning, tree detection, and green cover analysis.
 2. **🌍 GeoGuardian** (`http://localhost:3000`)
-   - Geographical monitoring and environmental protection.
+   - Geographical monitoring, satellite observation, and environmental protection.
 3. **🍃 CarbonWise AI** (`http://localhost:5173`)
    - Carbon footprint tracking and emission reduction intelligence.
-4. **🧠 EcoMind AI** (`http://localhost:5174`)
-   - Knowledge base and AI-driven insights for sustainable practices.
-5. **🌱 Plantwise AI** (`http://localhost:5175`)
-   - Plant health monitoring and agricultural intelligence.
+4. **🌱 PlantWise AI** (`http://localhost:5175`)
+   - Environmental regulation compliance and plantation recommendations.
+5. **🌾 AgriSense AI** (`http://localhost:8003`)
+   - AI-powered smart agriculture, crop advisory, and yield prediction.
 
 ## 🚀 Getting Started
 

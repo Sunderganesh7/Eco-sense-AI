@@ -28,11 +28,6 @@
     --color-geo-text: #1e40af;
     --color-geo-accent: #3b82f6;
 
-    --color-ecomind-bg: #fff7ed;
-    --color-ecomind-border: #ffedd5;
-    --color-ecomind-light: #ffedd5;
-    --color-ecomind-text: #c2410c;
-    --color-ecomind-accent: #f97316;
 
     --color-plantwise-bg: #f0fdfa;
     --color-plantwise-border: #ccfbf1;
@@ -721,10 +716,22 @@ body {
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(6, 1fr);
     gap: 24px;
     margin-bottom: 32px;
     width: 100%;
+}
+
+.cards-grid > .feature-card {
+    grid-column: span 2;
+}
+
+.cards-grid > .feature-card:nth-child(4) {
+    grid-column: 2 / span 2;
+}
+
+.cards-grid > .feature-card:nth-child(5) {
+    grid-column: 4 / span 2;
 }
 
 .feature-card {
@@ -772,15 +779,6 @@ body {
     border-bottom-right-radius: 16px;
 }
 
-.card-ecomind {
-    background: var(--color-ecomind-bg);
-    border: 1px solid var(--color-ecomind-border);
-}
-
-.card-ecomind .card-bg-image {
-    object-position: center bottom;
-    opacity: 1;
-}
 
 .card-plantwise {
     background: var(--color-plantwise-bg);
@@ -850,9 +848,6 @@ body {
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.15) 8%, rgba(255, 255, 255, 0) 20%);
 }
 
-.card-ecomind::after {
-    background: linear-gradient(to bottom, rgba(255, 247, 237, 0.75) 0%, rgba(255, 247, 237, 0.2) 8%, rgba(255, 247, 237, 0) 20%);
-}
 
 .card-geoguardian::after {
     background: linear-gradient(to bottom, rgba(239, 246, 255, 0.75) 0%, rgba(239, 246, 255, 0.2) 8%, rgba(239, 246, 255, 0) 20%);
@@ -925,10 +920,6 @@ body {
 
 
 
-.card-ecomind .card-icon {
-    background: var(--color-ecomind-light);
-    color: var(--color-ecomind-text);
-}
 
 .card-plantwise .card-icon {
     background: var(--color-plantwise-light);
@@ -974,9 +965,6 @@ body {
 
 
 
-.card-ecomind .card-tagline {
-    color: var(--color-ecomind-text);
-}
 
 .card-plantwise .card-tagline {
     color: var(--color-plantwise-text);
@@ -1043,10 +1031,6 @@ body {
 
 
 
-.card-ecomind .tag {
-    color: var(--color-ecomind-text);
-    border: 1px solid var(--color-ecomind-border);
-}
 
 .card-plantwise .tag {
     color: var(--color-plantwise-text);
@@ -1084,9 +1068,6 @@ body {
 
 
 
-.card-ecomind .card-action-link {
-    color: var(--color-ecomind-text);
-}
 
 .card-plantwise .card-action-link {
     color: var(--color-plantwise-text);
@@ -1222,9 +1203,25 @@ body {
 /* =========================================
    RESPONSIVE DESIGN
    ========================================= */
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
     .cards-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .cards-grid > .feature-card {
+        grid-column: auto;
+    }
+
+    .cards-grid > .feature-card:nth-child(4) {
+        grid-column: auto;
+    }
+
+    .cards-grid > .feature-card:nth-child(5) {
+        grid-column: 1 / -1;
+        max-width: calc(50% - 10px);
+        margin: 0 auto;
+        width: 100%;
     }
 
     .tech-strip {
@@ -1252,6 +1249,21 @@ body {
     }
 }
 
+@media (max-width: 900px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .cards-grid > .feature-card,
+    .cards-grid > .feature-card:nth-child(4),
+    .cards-grid > .feature-card:nth-child(5) {
+        grid-column: auto;
+        max-width: 100%;
+        margin: 0;
+    }
+}
+
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
@@ -1264,6 +1276,15 @@ body {
 
     .cards-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .cards-grid > .feature-card,
+    .cards-grid > .feature-card:nth-child(4),
+    .cards-grid > .feature-card:nth-child(5) {
+        grid-column: auto;
+        max-width: 100%;
+        margin: 0;
     }
 
     .top-header {
