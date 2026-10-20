@@ -24,10 +24,12 @@ const SOIL_STATUS = (ph) => {
 }
 
 const FIELD_IMAGES = [
+  '/test-croprows.jpg',
+  '/test-cornfield.jpg',
+  '/test-soja.jpg',
   '/field-aerial.jpg',
-  '/dashboard-banner.jpg',
-  '/crop-advisory-banner.jpg',
-  '/weather-sunny.jpg',
+  '/card-crop.jpg',
+  '/test-sprouts.jpg',
 ]
 
 const EMPTY_FORM = {
@@ -45,7 +47,15 @@ export default function Fields() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(null)
   const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
   const { t } = useLanguage()
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 4500)
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
   const loadFields = async () => {
     setFieldsLoading(true)
@@ -60,13 +70,39 @@ export default function Fields() {
   const handleAddField = async (e) => {
     e.preventDefault()
     if (!addForm.label.trim()) { setError('Please enter a field name'); return }
+    if (!addForm.area_ha || Number(addForm.area_ha) <= 0) {
+      setError('Please enter a valid area in hectares (must be greater than 0)')
+      return
+    }
     setSaving(true); setError(null)
     try {
-      await createField({ label: addForm.label.trim(), area_ha: addForm.area_ha, irrigation: addForm.irrigation.toLowerCase(), soil_n: addForm.soil_n, soil_p: addForm.soil_p, soil_k: addForm.soil_k, soil_ph: addForm.soil_ph, soil_type: addForm.soil_type, previous_crop: addForm.previous_crop, current_crop: addForm.current_crop, status: addForm.status })
-      setShowAddModal(false); setAddForm({ ...EMPTY_FORM }); await loadFields()
+      const res = await createField({
+        label: addForm.label.trim(),
+        area_ha: Number(addForm.area_ha),
+        irrigation: (addForm.irrigation || 'rainfed').toLowerCase(),
+        soil_n: Number(addForm.soil_n) || 0,
+        soil_p: Number(addForm.soil_p) || 0,
+        soil_k: Number(addForm.soil_k) || 0,
+        soil_ph: Number(addForm.soil_ph) || 7.0,
+        soil_type: addForm.soil_type,
+        previous_crop: addForm.previous_crop,
+        current_crop: addForm.current_crop,
+        status: addForm.status,
+      })
+      if (!res || (!res.field && !res.id)) {
+        throw new Error('Field was not stored')
+      }
+      setShowAddModal(false)
+      const fieldName = addForm.label.trim()
+      setAddForm({ ...EMPTY_FORM })
+      await loadFields()
+      setSuccess(`Field "${fieldName}" added successfully!`)
       window.dispatchEvent(new Event('fields-updated'))
-    } catch (err) { setError(err.message || 'Failed to create field') }
-    finally { setSaving(false) }
+    } catch (err) {
+      setError(err.message || 'Failed to create field')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleDeleteField = async (fieldId) => {
@@ -76,9 +112,14 @@ export default function Fields() {
       await deleteFieldById(fieldId)
       if (selected?.id === fieldId) setSelected(null)
       await loadFields()
+      setSuccess('Field deleted successfully')
       window.dispatchEvent(new Event('fields-updated'))
-    } catch (err) { console.error('Failed to delete field:', err) }
-    finally { setDeleting(null) }
+    } catch (err) {
+      console.error('Failed to delete field:', err)
+      setError(err.message || 'Failed to delete field')
+    } finally {
+      setDeleting(null)
+    }
   }
 
   const handleToggleStatus = async (plot, e) => {
@@ -141,7 +182,7 @@ export default function Fields() {
           </div>
 
           <button
-            onClick={() => { setShowAddModal(true); setError(null); setAddForm({ ...EMPTY_FORM }) }}
+            onClick={() => { setShowAddModal(true); setError(null); setSuccess(null); setAddForm({ ...EMPTY_FORM }) }}
             className="px-6 py-3.5 bg-[#087F5B] hover:bg-[#063D2E] text-white font-bold rounded-2xl shadow-lg shadow-[#087F5B]/25 flex items-center gap-2 transition-all text-xs sm:text-sm shrink-0 cursor-pointer"
           >
             <span className="material-symbols-outlined text-lg">add_circle</span>
@@ -149,6 +190,19 @@ export default function Fields() {
           </button>
         </div>
       </section>
+
+      {/* Success Notification Banner */}
+      {success && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl flex items-center justify-between shadow-xs animate-fade-in">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-emerald-600">check_circle</span>
+            <span className="text-sm font-semibold"><AzureTranslate text={success} /></span>
+          </div>
+          <button onClick={() => setSuccess(null)} className="p-1 text-emerald-600 hover:text-emerald-800 transition-colors">
+            <span className="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      )}
 
       {/* Stats Banner */}
       {fields.length > 0 && (
@@ -192,8 +246,16 @@ export default function Fields() {
               }`}>
               {/* Field Hero Image */}
               <div className="h-28 relative overflow-hidden">
-                <img src={FIELD_IMAGES[idx % FIELD_IMAGES.length]} alt={plot.label}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img
+                  src={plot.image || plot.image_url || FIELD_IMAGES[idx % FIELD_IMAGES.length]}
+                  alt={plot.label}
+                  onError={(e) => {
+                    if (e.currentTarget.src !== window.location.origin + '/field-aerial.jpg') {
+                      e.currentTarget.src = '/field-aerial.jpg'
+                    }
+                  }}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
                   <div>

@@ -1,10 +1,19 @@
+import {
+  isDemoUser,
+  getDemoFields,
+  getDemoFieldById,
+  createDemoField,
+  updateDemoField,
+  deleteDemoField,
+  getDemoCropPlans,
+} from './demoFieldStore.js';
+
 /**
  * API Service — Connects frontend to FastAPI backend
  */
 
 const rawBase = (
-  import.meta.env.VITE_API_BASE_URL ||
-  import.meta.env.VITE_API_URL ||
+  (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL)) ||
   'https://eco-sense-ai-2.onrender.com'
 ).replace(/\/+$/, '');
 
@@ -94,14 +103,26 @@ export async function deleteProfile() {
 // ── Fields ────────────────────────────────────────────
 
 export async function getFields() {
+  if (isDemoUser()) {
+    const fields = getDemoFields();
+    return { fields, total: fields.length, is_demo: true };
+  }
   return apiCall('/fields');
 }
 
 export async function getFieldById(fieldId) {
+  if (isDemoUser()) {
+    const field = getDemoFieldById(fieldId);
+    if (!field) throw new Error('Field not found');
+    return { field };
+  }
   return apiCall(`/fields/${fieldId}`);
 }
 
 export async function createField(data) {
+  if (isDemoUser()) {
+    return createDemoField(data);
+  }
   return apiCall('/fields', {
     method: 'POST',
     body: JSON.stringify(data),
@@ -109,6 +130,9 @@ export async function createField(data) {
 }
 
 export async function updateField(fieldId, data) {
+  if (isDemoUser()) {
+    return updateDemoField(fieldId, data);
+  }
   return apiCall(`/fields/${fieldId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -116,6 +140,9 @@ export async function updateField(fieldId, data) {
 }
 
 export async function deleteFieldById(fieldId) {
+  if (isDemoUser()) {
+    return deleteDemoField(fieldId);
+  }
   return apiCall(`/fields/${fieldId}`, { method: 'DELETE' });
 }
 
@@ -245,6 +272,9 @@ export async function deleteDiseaseHistory(scanId) {
 // ── Crop Plans (Rotation Planner) ─────────────────────
 
 export async function getCropPlans(year = null, grouped = true) {
+  if (isDemoUser()) {
+    return getDemoCropPlans(year, grouped);
+  }
   let url = `/plans?grouped=${grouped}`;
   if (year) url += `&year=${year}`;
   return apiCall(url);

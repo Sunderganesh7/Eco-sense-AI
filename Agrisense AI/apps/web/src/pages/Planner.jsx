@@ -139,7 +139,7 @@ function generateRotationPlan(state, previousCrop, year) {
 export default function Planner() {
   const { state: detectedState } = useLocation()
   const { t } = useLanguage()
-  const [selectedState, setSelectedState] = useState('')
+  const [selectedState, setSelectedState] = useState(detectedState || 'Uttar Pradesh')
   const [selectedYear, setSelectedYear] = useState(2026)
   const [selectedSeason, setSelectedSeason] = useState('all')
   const [states, setStates] = useState([])
@@ -153,19 +153,29 @@ export default function Planner() {
 
   useEffect(() => {
     getStates().then(d => setStates(d.states || [])).catch(() => {})
-    Promise.all([
-      getFields().catch(() => ({ fields: [] })),
-      getCropPlans(selectedYear, false).catch(() => ({ plans: [] })),
-    ]).then(([fieldsData, plansData]) => {
-      setUserFields(fieldsData?.fields || [])
-      setSavedPlans(plansData?.plans || [])
-    }).finally(() => {
-      setLoadingFields(false)
-    })
+    const loadData = () => {
+      return Promise.all([
+        getFields().catch(() => ({ fields: [] })),
+        getCropPlans(selectedYear, false).catch(() => ({ plans: [] })),
+      ]).then(([fieldsData, plansData]) => {
+        setUserFields(fieldsData?.fields || [])
+        setSavedPlans(plansData?.plans || [])
+      }).finally(() => {
+        setLoadingFields(false)
+      })
+    }
+    loadData()
+
+    window.addEventListener('fields-updated', loadData)
+    window.addEventListener('focus', loadData)
+    return () => {
+      window.removeEventListener('fields-updated', loadData)
+      window.removeEventListener('focus', loadData)
+    }
   }, [selectedYear])
 
   useEffect(() => {
-    if (detectedState && !selectedState) setSelectedState(detectedState)
+    if (detectedState) setSelectedState(detectedState)
   }, [detectedState])
 
   useEffect(() => {
