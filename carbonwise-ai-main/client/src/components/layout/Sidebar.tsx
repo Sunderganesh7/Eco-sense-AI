@@ -27,7 +27,7 @@ export function Sidebar() {
 
       {/* Brand Logo */}
       <div className="px-5 pt-6 pb-6 flex flex-col">
-        <a href="http://localhost:8000" className="flex items-center gap-3 text-white hover:text-[#12b76a] transition-colors group">
+        <div className="flex items-center gap-3 text-white">
           <div className="flex items-center justify-center text-[#12b76a] flex-shrink-0">
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path>
@@ -40,7 +40,7 @@ export function Sidebar() {
               <span>TOMORROW</span>
             </p>
           </div>
-        </a>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -73,25 +73,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      {/* Bottom Section - Back to Platform */}
-      <div className="p-4 border-t border-[#1f2937] shrink-0 relative z-10 mt-auto bg-[#0b1519]">
-        <a
-          href="http://localhost:8000"
-          onClick={(e) => {
-            if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
-              e.preventDefault();
-              window.location.href = "http://localhost:8000";
-            }
-          }}
-          id="back-to-platform-btn"
-          className="flex items-center justify-center gap-2.5 w-full py-2.5 px-4 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white font-semibold text-[14px] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-pointer"
-          title="Back to Platform"
-        >
-          <span className="text-base leading-none font-bold transition-transform duration-200 group-hover:-translate-x-1 shrink-0">←</span>
-          <span>Back to Platform</span>
-        </a>
-      </div>
     </aside>
   );
 }
