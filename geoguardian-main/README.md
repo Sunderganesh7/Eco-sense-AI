@@ -1,115 +1,151 @@
-
 # GeoGuardian 🌍
-### AI-Powered Satellite-Based Environmental Monitoring
+### Satellite-Based Environmental Monitoring | Eco Sense AI
 
-GeoGuardian is an environmental monitoring project designed to help users explore satellite imagery and understand changes in the environment. It aims to make geospatial insights easier to access by bringing environmental data and AI-assisted analysis into one workflow.
+GeoGuardian is a module within **Eco Sense AI** focused on understanding environmental conditions through satellite imagery and geospatial analysis. It is designed to help users explore geographic areas, examine vegetation-related indicators, and compare observations when imagery from different dates is available.
 
-> **Note:** Update the setup commands and technology list below to match the current contents of this repository. I could not verify every file and runtime command in the linked GitHub subdirectory.
+> **Part of Eco Sense AI:** [View the main repository](https://github.com/Sunderganesh7/Eco-sense-AI)
 
-## 🌱 Project Overview
+## 📌 Overview
 
-Environmental changes such as vegetation loss, land-use change, and wildfire impacts can be difficult to track using manual observation alone. GeoGuardian explores how satellite imagery and geospatial analysis can help users inspect an area and identify changes over time.
+Environmental changes can be difficult to assess through ground observation alone. Satellite imagery provides a way to study large areas and compare environmental patterns over time. GeoGuardian brings relevant geospatial data and analysis into a workflow intended to make those observations easier to explore.
 
-## ✨ Key Goals
+## ✨ Project Objectives
 
-- **Satellite imagery analysis** — use satellite data to study selected geographic areas.
-- **Environmental change monitoring** — compare observations across different dates when suitable imagery is available.
-- **Vegetation insights** — use vegetation indices such as NDVI where the required spectral bands are available.
-- **AI-assisted analysis** — support the interpretation of environmental observations.
-- **Geospatial visualization** — help users understand results in their geographic context.
+- **Satellite imagery analysis:** Study selected geographic areas using available satellite data.
+- **Environmental monitoring:** Compare observations across dates when suitable imagery is available.
+- **Vegetation analysis:** Use vegetation indices such as NDVI when the required spectral bands are available.
+- **Geospatial visualization:** Present findings in their geographic context.
+- **AI-assisted insights:** Use the analysis capabilities implemented in the project to support interpretation.
 
-*Only describe a capability as implemented if it is available in the current codebase and has been tested.*
+## 🛰️ Satellite Data and NDVI
 
-## 🛰️ Data and Analysis
+The project may use **Sentinel-2** imagery and the **Copernicus Data Space Ecosystem**, depending on the configured data workflow.
 
-GeoGuardian may use Sentinel-2 imagery and related geospatial data services, depending on the configuration of the project.
+### Normalized Difference Vegetation Index (NDVI)
 
-### NDVI
-
-The Normalized Difference Vegetation Index (NDVI) is a common indicator used to assess vegetation greenness using near-infrared (NIR) and red reflectance:
+NDVI is commonly used to estimate vegetation greenness from red and near-infrared reflectance.
 
 \[
 NDVI = \frac{NIR - Red}{NIR + Red}
 \]
 
-For Sentinel-2, the commonly used bands are **Band 8 (NIR)** and **Band 4 (Red)**. NDVI is an indicator, not a direct measurement of tree count or overall ecosystem health. Cloud cover, season, resolution, and image quality can affect comparisons.
+For Sentinel-2 imagery, the commonly used bands are:
 
-## 🧭 Typical Workflow
+- **Band 4:** Red
+- **Band 8:** Near-Infrared (NIR)
 
-1. Select or define an area of interest.
-2. Retrieve or upload the relevant satellite imagery.
-3. Prepare the imagery and check data quality.
-4. Run the supported geospatial or AI analysis.
-5. View the results and compare observations where historical data is available.
-6. Interpret findings with attention to data quality and model limitations.
+NDVI values should be interpreted with care. Cloud cover, seasonal changes, image quality, and the selected observation dates can affect the results. NDVI alone does not establish the cause of an environmental change.
 
-## 🛠️ Technology Stack
+## 🔄 Typical Workflow
 
-The exact stack should reflect the packages and services used in this repository. Potential components include:
+1. Select a geographic area or area of interest.
+2. Retrieve or provide the satellite imagery supported by the application.
+3. Prepare the imagery and check its quality.
+4. Run the analysis available in the application.
+5. Explore the results using the available visualizations.
+6. Compare observations across dates if historical imagery is available.
 
-- **Satellite data:** Sentinel-2 / Copernicus Data Space Ecosystem
-- **Geospatial analysis:** raster and vector data processing tools
-- **AI / computer vision:** the model and libraries configured by the project
-- **Application interface and API:** use the frontend and backend frameworks present in this repository
+## 🧰 Technology
 
-Do not list a technology as part of the implemented stack unless it is actually used by the project.
+The repository's actual dependency files are the source of truth for the complete technology stack. The project may involve the following components where configured:
+
+| Component | Purpose |
+|---|---|
+| Sentinel-2 | Satellite imagery source |
+| Copernicus Data Space Ecosystem | Access to supported Earth observation data |
+| NDVI | Vegetation-related indicator derived from spectral bands |
+| Geospatial processing tools | Processing raster or geographic data |
+| AI / computer vision | Automated analysis where implemented |
+| Web interface and API | User interaction and application services |
+
+Only technologies actually used by the current code should be listed as implemented dependencies.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-Install the runtimes required by the repository, such as Python or Node.js, depending on its implementation.
+Install the runtime and tools required by the files in this module. Depending on the project structure, this may include Python, Node.js, or both.
 
-### Installation
-
-Clone the main repository:
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Sunderganesh7/Eco-sense-AI.git
 cd Eco-sense-AI/geoguardian-main
 ```
 
-Then follow the instructions for the actual project structure:
+### 2. Install dependencies
 
-1. Install dependencies using the package manager and manifest included in the relevant folder (for example, `requirements.txt` or `package.json`).
-2. Configure required environment variables in a local `.env` file if the application needs API credentials.
-3. Start the backend and/or frontend using the commands documented by the project.
-4. Open the local URL printed by the development server.
+Use the dependency manifest present in this folder:
 
-**Important:** The exact install and run commands are intentionally not guessed here. Check the repository's dependency files and application entry points before publishing this section.
+- If `requirements.txt` exists, create a virtual environment and install the Python packages.
+- If `package.json` exists, install the Node.js packages with the package manager used by the project.
+- If the project has separate frontend and backend folders, follow the setup instructions for each one.
 
-## 🔐 Environment Variables and Security
+Python example, if the module uses `requirements.txt`:
 
-- Keep API keys, access tokens, and private credentials out of source code.
-- Store secrets in local environment variables or the hosting provider's secret settings.
-- Add `.env` and other sensitive local files to `.gitignore`.
-- Provide an `.env.example` containing variable names only, with placeholder values.
-- If a secret was committed or pushed to a public repository, revoke or rotate it; deleting it from the latest commit alone may not remove it from Git history.
+```bash
+python -m venv .venv
+```
+
+Windows:
+
+```powershell
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+macOS / Linux:
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 3. Configure environment variables
+
+If the application requires API credentials, place them in a local `.env` file or your deployment provider's environment settings. Use the variable names expected by the code. Do not commit real credentials.
+
+### 4. Run the application
+
+Use the start command defined by the actual backend or frontend configuration. For example, use the project's documented Python entry point or the `scripts` defined in `package.json`. The exact command depends on the current repository structure.
+
+## 🔐 Security
+
+- Never commit API keys, passwords, access tokens, or private credentials.
+- Add `.env` and other sensitive files to `.gitignore`.
+- Keep an `.env.example` with placeholder values only.
+- Configure secrets through environment variables or your hosting provider's secret manager.
+- If a secret was pushed to a public repository, revoke or rotate it. Removing it from the latest commit may not remove it from Git history.
 
 ## ⚠️ Limitations
 
-- Satellite imagery can be affected by cloud cover, shadows, resolution, and acquisition dates.
-- NDVI alone cannot confirm the cause of an environmental change.
-- AI detections are estimates and should be validated before being used for important decisions.
-- Results depend on the imagery, geographic area, model, and configuration available to the application.
+- Satellite imagery may contain clouds, shadows, or resolution-related limitations.
+- Comparisons can be affected by seasonal and date-related differences.
+- NDVI is an indicator of vegetation greenness, not a direct measurement of biodiversity or total ecosystem health.
+- AI-generated or model-derived results may contain errors and should be validated before being used for important decisions.
+- Results depend on the available imagery, geographic area, model, and application configuration.
 
-## 🔮 Future Improvements
+## 🔮 Future Scope
 
-- Add clearer before-and-after satellite comparisons.
-- Improve map-based exploration of areas of interest.
-- Provide downloadable environmental analysis reports.
-- Add model evaluation and confidence information to detection results.
-- Expand historical monitoring and validated environmental indicators.
+Potential improvements include:
+
+- More intuitive before-and-after imagery comparisons.
+- Improved map-based selection of areas of interest.
+- Historical monitoring and time-series visualizations.
+- Downloadable environmental analysis reports.
+- Clearer model confidence and validation information.
+- Additional verified environmental indicators.
 
 ## 🤝 Contributing
 
-Contributions, bug reports, and suggestions are welcome. Before submitting a change:
+Suggestions, bug reports, and contributions are welcome.
 
-1. Describe the issue or improvement.
-2. Test the change locally.
-3. Document any new environment variables or setup steps.
-4. Update this README when project behavior or installation instructions change.
+1. Create a branch for your change.
+2. Make and test the change locally.
+3. Document new configuration requirements.
+4. Update the README when setup steps or application behavior change.
+5. Submit a pull request with a clear summary.
 
 ## 📄 License
 
-Add the license that applies to this repository. If no license has been selected, do not assume that the project is released under an open-source license.
+Add the license that applies to this project. If the repository contains a `LICENSE` file, refer to that file. Do not assume a license without confirming it.
