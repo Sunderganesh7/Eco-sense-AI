@@ -1,4 +1,4 @@
-# GreenPermit AI — GIS-Based Smart Tree Plantation Planning & Legal Compliance System
+# Plantwise AI — GIS-Based Smart Tree Plantation Planning & Legal Compliance System
 
 > **Statutory Compliance Advisory**: *This system provides automated preliminary legal-compliance assessments based on codified municipal, state, and central environmental laws. Final approval remains exclusively with the competent government authority (Tree Authority / Forest Department / MCZMA / PWD / NHAI).*
 
