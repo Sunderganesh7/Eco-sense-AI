@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Shield, Image, Film,
   Activity, History, ArrowLeft, Globe
 } from "lucide-react";
+import config from "../config";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -96,7 +97,7 @@ const Sidebar = () => {
         {/* Footer */}
         <div className="mt-auto pt-5 border-t border-[#1b3439] relative z-20 pb-1">
           <a
-            href="http://localhost:8000"
+            href={config.MAIN_PORTAL_URL || "https://eco-sense-ai-beta.vercel.app"}
             className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-[13px] font-medium text-slate-400 hover:text-white group border border-transparent backdrop-blur-sm hover:bg-slate-800/30"
           >
             <ArrowLeft className="w-[16px] h-[16px] group-hover:text-teal-400 transition-transform duration-200 group-hover:-translate-x-1 flex-shrink-0" strokeWidth={2} />

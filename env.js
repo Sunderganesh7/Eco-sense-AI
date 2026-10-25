@@ -1,7 +1,10 @@
 // EcoSense AI global environment configuration
 window.ENV = {
-    VITE_GREEN_PATH_API_URL: "",
-    VITE_CARBONWISE_URL: "https://eco-sense-ai-bvxx.vercel.app",
-    VITE_PLANTWISE_URL: "https://eco-sense-ai-frontend-five.vercel.app",
-    VITE_AGRISENSE_URL: "https://eco-sense-ai-web.vercel.app"
+    MAIN_PORTAL_URL: "https://eco-sense-ai-beta.vercel.app",
+    VITE_AGRISENSE_URL: "https://eco-sense-ai-web.vercel.app",
+    VITE_CARBONWISE_URL: "https://eco-sense-ai-w7d6.vercel.app",
+    VITE_GEOGUARDIAN_URL: "https://geoguardian-mu.vercel.app",
+    VITE_GREENPATH_URL: "https://eco-sense-ai-greenpathauthfrontend.vercel.app",
+    VITE_PLANTWISE_URL: "https://eco-sense-ai-frontend-eight.vercel.app"
 };
+

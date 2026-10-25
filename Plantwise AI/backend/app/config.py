@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     API_PREFIX: str = "/api"
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./greenpermit.db")
     CORS_ORIGINS: list[str] = [
+        "https://eco-sense-ai-frontend-eight.vercel.app",
+        "https://eco-sense-ai-beta.vercel.app",
         "https://eco-sense-ai-frontend-five.vercel.app",
         "https://eco-sense-ai-one.vercel.app",
         "http://localhost:5173",

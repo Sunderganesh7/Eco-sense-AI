@@ -14,7 +14,7 @@ import cardMarketImg from '../assets/card-market.jpg';
 import heroImg from '../assets/hero-landscape.jpg';
 import ctaImg from '../assets/cta-landscape.jpg';
 
-const MAIN_PORTAL_URL = import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-one.vercel.app';
+const MAIN_PORTAL_URL = import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-beta.vercel.app';
 
 export default function Landing() {
   const navigate = useNavigate();

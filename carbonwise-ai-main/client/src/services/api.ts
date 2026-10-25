@@ -1,6 +1,7 @@
 import type { CarbonInput, FootprintResponse, Challenge } from '../types';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const rawApiUrl = (import.meta.env.VITE_API_URL || 'https://eco-sense-ai-1uol.onrender.com').replace(/\/+$/, '');
+const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 async function request<T>(
   endpoint: string,

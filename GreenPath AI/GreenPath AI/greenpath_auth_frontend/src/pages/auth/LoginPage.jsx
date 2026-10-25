@@ -42,15 +42,17 @@ export const LoginPage = () => {
     setPassword(demoPw);
   };
 
+  const MAIN_PORTAL_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_MAIN_PORTAL_URL) || 'https://eco-sense-ai-beta.vercel.app';
+
   return (
     <div className="min-h-[88vh] flex items-center justify-center px-4 py-12 relative">
       {/* Top-Left Navigation Button */}
       <a
-        href="http://localhost:8000"
+        href={MAIN_PORTAL_URL}
         onClick={(e) => {
           if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
             e.preventDefault();
-            window.location.href = "http://localhost:8000";
+            window.location.href = MAIN_PORTAL_URL;
           }
         }}
         id="auth-back-btn"

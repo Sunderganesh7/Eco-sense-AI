@@ -10,7 +10,7 @@ import './env.js';
 
     // Retrieve configured CarbonWise AI URL or default to the verified deployed frontend
     const CARBONWISE_URL = (window.ENV && window.ENV.VITE_CARBONWISE_URL) 
-        || 'https://eco-sense-ai-bvxx.vercel.app';
+        || 'https://eco-sense-ai-w7d6.vercel.app';
 
     // DOM Elements
     const dashboardOverview = document.getElementById('dashboard-overview');
@@ -183,20 +183,23 @@ import './env.js';
     if (cardCarbonwise) {
         cardCarbonwise.addEventListener('click', function (e) {
             e.preventDefault();
-            openCarbonWise();
+            window.location.href = CARBONWISE_URL;
         });
         cardCarbonwise.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                openCarbonWise();
+                window.location.href = CARBONWISE_URL;
             }
         });
     }
 
     if (navItemCarbonwise) {
         navItemCarbonwise.addEventListener('click', function (e) {
-            e.preventDefault();
-            openCarbonWise();
+            // Respect target="_blank" or direct navigation to independent module UI
+            if (!e.ctrlKey && !e.metaKey && !navItemCarbonwise.target) {
+                e.preventDefault();
+                window.location.href = CARBONWISE_URL;
+            }
         });
     }
 

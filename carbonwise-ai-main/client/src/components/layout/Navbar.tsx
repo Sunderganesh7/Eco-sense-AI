@@ -25,14 +25,18 @@ export function Navbar() {
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Eco Sense AI Brand */}
-            <div className="flex flex-col text-slate-800">
-              <div className="flex items-center gap-1.5 font-bold text-sm">
-                <svg className="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path></svg>
+            {/* Eco Sense AI Main Portal Link */}
+            <a
+              href={import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-beta.vercel.app'}
+              className="flex flex-col text-slate-800 hover:text-emerald-700 transition-colors group cursor-pointer"
+              title="Return to EcoSense AI Main Dashboard"
+            >
+              <div className="flex items-center gap-1.5 font-bold text-sm group-hover:underline">
+                <svg className="w-3.5 h-3.5 text-emerald-500 group-hover:-translate-x-0.5 transition-transform" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2zM9.5 16.5l-4-4 1.414-1.414L9.5 13.672l6.086-6.086L17 9l-7.5 7.5z" clipRule="evenodd"></path></svg>
                 Eco Sense AI
               </div>
-              <span className="text-[10px] text-slate-400 font-medium tracking-wide">For a Greener Tomorrow</span>
-            </div>
+              <span className="text-[10px] text-slate-400 group-hover:text-emerald-600 font-medium tracking-wide">← Return to Portal</span>
+            </a>
             
             {/* Separator */}
             <div className="w-[1px] h-8 bg-slate-200 mx-2 hidden sm:block"></div>

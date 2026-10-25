@@ -3,7 +3,13 @@
  * Manages HTTP communication with the Flask MVC Auth backend.
  */
 
-const BASE_URL = '/api/v1';
+// Dynamic backend URL resolution (configured on Vercel or defaults to Render backend)
+const rawBase = (
+  (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL)) ||
+  'https://greenpath-ai-api.onrender.com'
+).replace(/\/+$/, '');
+
+const BASE_URL = rawBase.endsWith('/api/v1') ? rawBase : `${rawBase}/api/v1`;
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('greenpath_access_token');

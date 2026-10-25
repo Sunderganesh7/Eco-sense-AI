@@ -78,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
         <div className="mt-3 mb-4 border-t border-[#e2e8e2] dark:border-[#232f25]"></div>
         
         <a
-          href={import.meta.env.VITE_MAIN_PORTAL_URL || "https://eco-sense-ai-one.vercel.app"}
+          href={import.meta.env.VITE_MAIN_PORTAL_URL || "https://eco-sense-ai-beta.vercel.app"}
           className="w-full flex items-center gap-3 px-3.5 py-2.5 mb-2 rounded-[10px] text-[13px] font-semibold transition-all duration-200 cursor-pointer border bg-emerald-50 border-emerald-200 text-forest-900 hover:bg-emerald-100 hover:border-emerald-300 hover:text-forest-950 dark:bg-emerald-500/10 dark:border-emerald-500/25 dark:text-emerald-50 dark:hover:bg-emerald-500/20 dark:hover:border-emerald-500/40 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 group"
         >
           <ArrowLeft className="w-[17px] h-[17px] shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors" />

@@ -36,6 +36,7 @@ const allowedOrigins = [
   'http://localhost:8000',
   'http://127.0.0.1:8000',
   'https://geoguardian-mu.vercel.app',
+  'https://eco-sense-ai-beta.vercel.app',
   'https://eco-sense-ai-one.vercel.app',
   process.env.CLIENT_URL,
   process.env.FRONTEND_URL,

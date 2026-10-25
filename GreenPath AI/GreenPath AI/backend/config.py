@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     DEBUG: bool = True
     SECRET_KEY: str = "changeme-in-production-at-least-32-characters"
-    ALLOWED_ORIGINS: str = "http://localhost:3000"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:8000,https://eco-sense-ai-greenpathauthfrontend.vercel.app,https://eco-sense-ai-beta.vercel.app,https://eco-sense-ai-w7d6.vercel.app"
 
     # --- JWT ---
     JWT_SECRET_KEY: str = "changeme-jwt-secret-in-production"

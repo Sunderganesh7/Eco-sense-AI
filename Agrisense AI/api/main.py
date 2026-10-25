@@ -91,6 +91,8 @@ app = FastAPI(
 # CORS -- allow production origins and dev environments
 ALLOWED_ORIGINS = [
     "https://eco-sense-ai-web.vercel.app",
+    "https://eco-sense-ai-beta.vercel.app",
+    "https://eco-sense-ai-w7d6.vercel.app",
     "https://eco-sense-ai-one.vercel.app",
     "http://localhost:5173",
     "http://localhost:5174",

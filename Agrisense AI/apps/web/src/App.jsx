@@ -24,7 +24,7 @@ import SmartAlerts from './pages/SmartAlerts'
 import ProfitPlanner from './pages/ProfitPlanner'
 import FieldScanner from './pages/FieldScanner'
 
-const MAIN_PORTAL_URL = import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-one.vercel.app';
+const MAIN_PORTAL_URL = import.meta.env.VITE_MAIN_PORTAL_URL || 'https://eco-sense-ai-beta.vercel.app';
 import Weather from './pages/Weather'
 import Schemes from './pages/Schemes'
 import Loans from './pages/Loans'
