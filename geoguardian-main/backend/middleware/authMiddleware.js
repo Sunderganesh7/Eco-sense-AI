@@ -5,7 +5,7 @@ import { getDb, isDbConnected } from "../config/db.js";
 export const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    const isDemo = process.env.DEMO_MODE === "true" || process.env.NODE_ENV !== "production";
+    const isDemo = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1" || process.env.NODE_ENV !== "production";
 
     // ─── Authenticated flow ─────────────────────────────────────────────────────────────
     // If a Bearer token is present, verify it and load the user.

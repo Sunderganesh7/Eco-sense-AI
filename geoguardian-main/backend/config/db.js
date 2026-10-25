@@ -35,7 +35,7 @@ const initializeGeoGuardianTable = async (dbPool) => {
 };
 
 const connectDB = async () => {
-  const isDemo = process.env.DEMO_MODE === "true";
+  const isDemo = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1";
   const hasCreds = Boolean(
     process.env.DB_HOST &&
     process.env.DB_NAME &&

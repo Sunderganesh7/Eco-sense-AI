@@ -91,7 +91,7 @@ export const getScenes = async (req, res) => {
     const bboxArray = parseBbox(bbox);
     const cloudCover = Number(req.query.cloudCover);
     if (!Number.isNaN(cloudCover) && (cloudCover < 0 || cloudCover > 100)) return res.status(400).json({ success: false, error: "cloudCover must be between 0 and 100" });
-    const isDemo = process.env.DEMO_MODE === "true";
+    const isDemo = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1";
     if (!isSentinelConfigured()) {
       if (isDemo) {
         const demoScenes = [
@@ -123,7 +123,7 @@ export const getNdvi = async (req, res) => {
     if (!date || !bbox) return res.status(400).json({ error: "Missing required fields: date, bbox" });
 
     const bboxArray = parseBbox(bbox);
-    const isDemo = process.env.DEMO_MODE === "true";
+    const isDemo = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1";
     if (!isSentinelConfigured() && isDemo) {
       return res.json({
         success: true,

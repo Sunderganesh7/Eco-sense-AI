@@ -17,7 +17,7 @@ export const getSatelliteImage = async (req, res) => {
       return res.status(400).json({ error: "BBox must be an array of 4 numbers: [minLon, minLat, maxLon, maxLat]" });
     }
 
-    const isDemo = process.env.DEMO_MODE === "true";
+    const isDemo = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1";
     if (!isSentinelConfigured() || !isDbConnected()) {
       if (isDemo) {
         return res.json({

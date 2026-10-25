@@ -26,7 +26,7 @@ export const createTimelapse = async (req, res) => {
     const bboxArray = parseBbox(bbox);
     const maxCloud = Number(cloudThreshold);
     if (!Number.isFinite(maxCloud) || maxCloud < 0 || maxCloud > 100) return res.status(400).json({ success: false, error: "cloudThreshold must be between 0 and 100" });
-    const isDemo = process.env.DEMO_MODE === "true";
+    const isDemo = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1";
     if (!isSentinelConfigured() && isDemo) {
       const demoFrames = [
         { frameId: "demo-frame-1", frameNumber: 1, date: startDate, url: "/satellite_hero.jpg" },

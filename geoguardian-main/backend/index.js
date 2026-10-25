@@ -27,7 +27,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-const isDemoMode = process.env.DEMO_MODE === "true";
+const isDemoMode = String(process.env.DEMO_MODE || "").trim().toLowerCase() === "true" || process.env.DEMO_MODE === "1";
 
 // Enhanced CORS configuration
 const allowedOrigins = [
@@ -67,7 +67,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Health check for API (available unconditionally)
 app.get("/api/health", (req, res) => {
-  const isDemo = process.env.DEMO_MODE === "true";
+  const isDemo = isDemoMode;
   const dbConnected = isDbConnected();
   const sentinelConfigured = isSentinelConfigured();
 
@@ -150,9 +150,11 @@ if (missingEnv.length > 0) {
   }
 }
 
+const HOST = process.env.HOST || "0.0.0.0";
+
 // Function to start Express server listening
 const startServer = () => {
-  app.listen(PORT, () => {
+  app.listen(PORT, HOST, () => {
     console.log(`
 ==================================================
  GEOGUARDIAN API
@@ -160,9 +162,9 @@ const startServer = () => {
 
 Application running successfully in ${isDemoMode ? "DEMO" : "PRODUCTION"} mode.
 
-Listening on Port: ${PORT}
-Frontend / API: http://localhost:${PORT}
-Health check: http://localhost:${PORT}/api/health
+Listening on: http://${HOST}:${PORT}
+Frontend / API: http://${HOST}:${PORT}
+Health check: http://${HOST}:${PORT}/api/health
 Database: ${isDbConnected() ? "Connected" : "Unavailable (Demo Mode Active)"}
 Sentinel Hub: ${isSentinelConfigured() ? "Configured" : "Unavailable (Demo Mode Active)"}
 
