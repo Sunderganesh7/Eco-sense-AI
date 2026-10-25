@@ -10,9 +10,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Install system deps (OpenCV requires libGL)
+# Install system deps (OpenCV requires libGL; replaced obsolete libgl1-mesa-glx with libgl1)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
@@ -29,6 +29,9 @@ RUN pip install --upgrade pip && \
 # Copy application code
 COPY . .
 
+# Ensure /app/backend exists for package imports regardless of build context
+RUN [ -d backend ] || ln -s . backend
+
 # Create necessary directories
 RUN mkdir -p uploads outputs datasets models
 
@@ -39,7 +42,7 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# Run with uvicorn
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# Run with uvicorn binding to 0.0.0.0 and dynamic Render $PORT
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
