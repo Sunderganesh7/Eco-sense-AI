@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: geoguardian-backend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: geoguardian-main/backend
+    buildCommand: npm install
+    startCommand: node index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEMO_MODE
+        value: "true"
+      - key: JWT_SECRET
+        value: "geoguardian-render-demo-secret-key-2026"
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SENTINEL_CLIENT_ID
+        sync: false
+      - key: SENTINEL_CLIENT_SECRET
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
